@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      //  temporary images
+      { hostname: "tailwindui.com" },
+    ],
+  },
+};
 
 export default nextConfig;
