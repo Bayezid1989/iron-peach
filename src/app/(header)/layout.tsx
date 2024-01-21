@@ -6,9 +6,9 @@ export default function HeaderLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="container flex flex-col">
+    <div className="flex flex-col w-full">
       <SiteHeader />
-      {children}
+      <div className="p-4 sm:p-6">{children}</div>
     </div>
   );
 }

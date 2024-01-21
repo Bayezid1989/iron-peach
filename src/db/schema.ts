@@ -28,70 +28,21 @@ const nanoId12 = varchar("id", {
 }).primaryKey();
 
 const userId = varchar("user_id", {
-  length: ID_LENGTH.userId,
+  length: ID_LENGTH.uid,
 });
 
 export const userTable = mysqlTable("user", {
   id: varchar("id", {
-    length: ID_LENGTH.userId, // change this when using custom user ids
+    length: ID_LENGTH.uid,
   }).primaryKey(),
   username: varchar("username", {
     length: 31,
   })
     .unique()
     .notNull(),
-  email: varchar("email", { length: 255 }).unique(),
-  emailVerified: boolean("email_verified"),
   imageUrl: text("image_url"),
-  googleUsername: varchar("google_username", { length: 31 }).unique(),
   country: mysqlEnum("country", COUNTRIES_ALPHA3),
   ...updatedAndCreatedAt,
-});
-
-export const authKeyTable = mysqlTable("auth_key", {
-  id: varchar("id", {
-    length: 255,
-  }).primaryKey(),
-  userId: userId.notNull(),
-  hashedPassword: varchar("hashed_password", {
-    length: 255,
-  }),
-});
-
-export const authSessionTable = mysqlTable("auth_session", {
-  id: varchar("id", {
-    length: 128,
-  }).primaryKey(),
-  userId: userId.notNull(),
-  activeExpires: bigint("active_expires", {
-    mode: "number",
-  }).notNull(),
-  idleExpires: bigint("idle_expires", {
-    mode: "number",
-  }).notNull(),
-});
-
-export const emailVerificationTokenTable = mysqlTable(
-  "email_verification_token",
-  {
-    id: varchar("id", {
-      length: 128,
-    }).primaryKey(),
-    userId: userId.notNull(),
-    expires: bigint("expires", {
-      mode: "number",
-    }).notNull(),
-  },
-);
-
-export const passwordResetTokenTable = mysqlTable("password_reset_token", {
-  id: varchar("id", {
-    length: 128,
-  }).primaryKey(),
-  userId: userId.notNull(),
-  expires: bigint("expires", {
-    mode: "number",
-  }).notNull(),
 });
 
 export const userRelations = relations(userTable, ({ many }) => ({
@@ -104,12 +55,9 @@ export const gameTable = mysqlTable(
   {
     id: nanoId12,
     totalYears: int("total_years").notNull(),
-    year: int("year").notNull().default(1),
-    round: int("round").notNull().default(1),
-    turn: int("turn").notNull().default(1),
     mapType: mysqlEnum("map_type", MAP_TYPES).notNull(),
     ownerId: varchar("owner_id", {
-      length: ID_LENGTH.userId,
+      length: ID_LENGTH.uid,
     }).notNull(),
     ...updatedAndCreatedAt,
   },
@@ -135,8 +83,6 @@ export const playerTable = mysqlTable(
       length: ID_LENGTH.nano,
     }).notNull(),
     order: int("order"),
-    currentPlace: mysqlEnum("current_place", PLACE_IDS),
-    balance: int("balance").notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.userId, t.gameId] }),

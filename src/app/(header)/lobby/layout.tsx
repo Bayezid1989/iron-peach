@@ -10,7 +10,7 @@ export default function LobbyLayout({
   return (
     <div className="flex">
       <Sidebar items={LOBBY_ITEMS} className="hidden lg:block" />
-      <div className="p-6">{children}</div>
+      <div className="w-full">{children}</div>
     </div>
   );
 }

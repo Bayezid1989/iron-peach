@@ -22,7 +22,7 @@ const getRef = (paths: string[]): DocOrCollectionRef => {
   return ref;
 };
 
-export const setOrMergeDoc = async (
+export const setOrMergeDocAdmin = async (
   paths: QueryPaths,
   data: PartialWithFieldValue<DocumentData>,
 ): Promise<string> => {
@@ -31,4 +31,10 @@ export const setOrMergeDoc = async (
 
   await ref.set(data, { merge: true });
   return ref.id;
+};
+
+export const deleteDocAdmin = async (paths: QueryPaths) => {
+  let ref = getRef(paths);
+  if (ref instanceof CollectionReference) ref = ref.doc();
+  return ref.delete();
 };
