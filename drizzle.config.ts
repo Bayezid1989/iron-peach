@@ -8,6 +8,7 @@ const drizzleConfig = {
   dbCredentials: {
     uri: process.env.DATABASE_URL || "",
   },
+  verbose: true,
 } satisfies Config;
 
 export default drizzleConfig;

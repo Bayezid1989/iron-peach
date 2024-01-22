@@ -1,4 +1,4 @@
-import NewGameForm from "@/components/lobby/new-game-form";
+import { NewGameForm } from "@/components/lobby/new-game-form";
 
 export default function NewGame() {
   return (

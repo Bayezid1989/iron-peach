@@ -20,7 +20,7 @@ const items = [
   { id: "3Bots", label: "3 Bots", disabled: true },
 ];
 
-export default function NewGameForm() {
+export function NewGameForm() {
   const { toast } = useToast();
 
   return (

@@ -2,7 +2,7 @@
 
 import { ID_LENGTH } from "@/constants/db";
 import { db } from "@/db";
-import { gameTable } from "@/db/schema";
+import { gameTable, playerTable } from "@/db/schema";
 import { getCurrentUser } from "@/lib/firebase-admin/auth";
 import {
   deleteDocAdmin,
@@ -28,29 +28,36 @@ export async function createNewGame(formData: FormData) {
 
   const id = nanoid(ID_LENGTH.nano);
 
-  const gameDoc = {
+  const gameDoc: FirestoreGame = {
     year: 1,
     round: 1,
     turn: 1,
     createdAt: new Date(),
     updatedAt: new Date(),
-  } as FirestoreGame;
+  };
 
   const responses = await Promise.allSettled([
-    db.insert(gameTable).values({
-      id,
-      totalYears: Number(rawFormData.year),
-      ownerId: user.uid,
-      mapType: "world",
+    db.transaction(async (tx) => {
+      await tx.insert(gameTable).values({
+        id,
+        totalYears: Number(rawFormData.year),
+        ownerId: user.uid,
+        mapType: "world",
+      });
+      await tx.insert(playerTable).values({ userId: user.uid, gameId: id });
     }),
     setOrMergeDocAdmin(["games", id], gameDoc),
   ]);
+
   const rejected = responses.filter((r) => r.status === "rejected");
   if (rejected.length > 0) {
     console.log("rejected", rejected);
     // Delete all created docs
-    await Promise.all([
-      db.delete(gameTable).where(eq(gameTable.id, id)),
+    await Promise.allSettled([
+      db.transaction(async (tx) => {
+        await tx.delete(gameTable).where(eq(gameTable.id, id));
+        await tx.delete(playerTable).where(eq(playerTable.gameId, id));
+      }),
       deleteDocAdmin(["games", id]),
     ]);
     throw new Error("Failed to create game.");

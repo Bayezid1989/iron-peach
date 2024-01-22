@@ -1,6 +1,4 @@
 import { Sidebar } from "@/components/lobby/side-bar";
-import { LOBBY_ITEMS } from "@/constants/navigation";
-import React from "react";
 
 export default function LobbyLayout({
   children,
@@ -9,7 +7,7 @@ export default function LobbyLayout({
 }) {
   return (
     <div className="flex">
-      <Sidebar items={LOBBY_ITEMS} className="hidden lg:block" />
+      <Sidebar className="hidden lg:block" />
       <div className="w-full">{children}</div>
     </div>
   );

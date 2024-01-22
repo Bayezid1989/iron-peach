@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/shadcn-utils";
@@ -9,10 +8,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { NAV_ITEMS } from "@/constants/navigation";
-import CompanyLogo from "../company-logo";
+import { CompanyLogo } from "../company-logo";
+import { useState } from "react";
 
 export function MobileNav() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>

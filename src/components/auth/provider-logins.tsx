@@ -14,7 +14,7 @@ import {
 import { useEffect } from "react";
 import useWindowSize from "@/hooks/useWindowSize";
 
-export default function ProviderLogins() {
+export function ProviderLogins() {
   const { replace, push } = useRouter();
   const [innerWidth] = useWindowSize();
   const pathname = usePathname();

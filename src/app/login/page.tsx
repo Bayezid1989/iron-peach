@@ -1,5 +1,5 @@
-import CompanyLogo from "@/components/company-logo";
-import ProviderLogins from "@/components/auth/provider-logins";
+import { CompanyLogo } from "@/components/company-logo";
+import { ProviderLogins } from "@/components/auth/provider-logins";
 import { isAuthenticated } from "@/lib/firebase-admin/auth";
 import { redirect } from "next/navigation";
 

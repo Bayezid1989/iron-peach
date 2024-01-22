@@ -1,7 +1,7 @@
 import { cn } from "@/lib/shadcn-utils";
 import Image from "next/image";
 
-export default function CompanyLogo({ className }: { className?: string }) {
+export function CompanyLogo({ className }: { className?: string }) {
   return (
     <svg
       className={cn("fill-violet-200 -scale-x-[100%]", className)}

@@ -1,11 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { cn } from "@/lib/shadcn-utils";
 import { NAV_ITEMS } from "@/constants/navigation";
-import CompanyLogo from "@/components/company-logo";
-import { getPathname } from "next-impl-getters/get-pathname";
+import { CompanyLogo } from "@/components/company-logo";
+import { usePathname } from "next/navigation";
 
 export function DesktopNav() {
-  const pathname = getPathname();
+  const pathname = usePathname();
+
   return (
     <div className="hidden md:flex items-center space-x-4">
       <Link href="/" className="flex items-center space-x-2">
