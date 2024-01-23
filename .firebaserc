@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "iron-peach-dev"
+    "default": "iron-peach-dev",
+    "prd": "iron-peach-prd",
+    "dev": "iron-peach-dev"
   }
 }
