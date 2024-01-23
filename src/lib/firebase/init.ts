@@ -7,7 +7,6 @@ import {
   useDeviceLanguage as setDeviceLanguage,
 } from "firebase/auth";
 import { getDatabase } from "firebase/database";
-import { initializeFirestore } from "firebase/firestore";
 import { getFunctions } from "firebase/functions";
 import { getStorage } from "firebase/storage";
 import { FIREBASE_CONFIG } from "@/constants/firebase";
@@ -22,9 +21,6 @@ const app = apps.length ? apps[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 setDeviceLanguage(auth);
 
-const firestore = initializeFirestore(app, {
-  ignoreUndefinedProperties: true,
-});
 const realtimeDb = getDatabase(app);
 const storage = getStorage(app);
 const functions = getFunctions(app);
@@ -47,4 +43,4 @@ const authProviders = {
 authProviders.google.setCustomParameters({ prompt: "select_account" });
 authProviders;
 
-export { firestore, storage, functions, realtimeDb, auth, authProviders };
+export { storage, functions, realtimeDb, auth, authProviders };

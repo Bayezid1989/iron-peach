@@ -4,11 +4,8 @@ import { ID_LENGTH } from "@/constants/db";
 import { db } from "@/db";
 import { gameTable, playerTable } from "@/db/schema";
 import { getCurrentUser } from "@/lib/firebase-admin/auth";
-import {
-  deleteDocAdmin,
-  setOrMergeDocAdmin,
-} from "@/lib/firebase-admin/firestore";
-import { FirestoreGame } from "@/types/firestore";
+import { getDocRef } from "@/lib/firebase-admin/realtimeDb";
+import { GameState } from "@/types/firebase";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { redirect } from "next/navigation";
@@ -28,12 +25,18 @@ export async function createNewGame(formData: FormData) {
 
   const id = nanoid(ID_LENGTH.nano);
 
-  const gameDoc: FirestoreGame = {
+  const gameDoc: GameState = {
     year: 1,
     round: 1,
     turn: 1,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    order: [user.uid],
+    players: {
+      [user.uid]: {
+        position: "geneva",
+        balance: 1000,
+        assets: {},
+      },
+    },
   };
 
   const responses = await Promise.allSettled([
@@ -46,7 +49,7 @@ export async function createNewGame(formData: FormData) {
       });
       await tx.insert(playerTable).values({ userId: user.uid, gameId: id });
     }),
-    setOrMergeDocAdmin(["games", id], gameDoc),
+    getDocRef("games", id).set(gameDoc),
   ]);
 
   const rejected = responses.filter((r) => r.status === "rejected");
@@ -58,7 +61,7 @@ export async function createNewGame(formData: FormData) {
         await tx.delete(gameTable).where(eq(gameTable.id, id));
         await tx.delete(playerTable).where(eq(playerTable.gameId, id));
       }),
-      deleteDocAdmin(["games", id]),
+      getDocRef("games", id).remove(),
     ]);
     throw new Error("Failed to create game.");
   } else {

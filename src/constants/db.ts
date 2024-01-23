@@ -3,9 +3,7 @@ export const ID_LENGTH = {
   nano: 12,
 };
 
-export const ACTION_TYPES:
-  | readonly [string, ...string[]]
-  | [string, ...string[]] = [
+export const ACTION_TYPES = [
   "roll",
   "move",
   "getItem",
@@ -15,50 +13,46 @@ export const ACTION_TYPES:
   "buyItem",
   "useItem",
   "endTurn",
-];
+] as const;
 
-export const MAP_TYPES: readonly [string, ...string[]] | [string, ...string[]] =
-  ["world", "europe", "usa", "asia"];
+export const MAP_TYPES = ["world", "europe", "usa", "asia"] as const;
 
-export const PLACE_IDS: readonly [string, ...string[]] | [string, ...string[]] =
-  [
-    "zaragoza",
-    "montpellier",
-    "burgos",
-    "toulouse",
-    "sanSebastian",
-    "pau",
-    "bordeaux",
-    "nantes",
-    "lyon",
-    "porto",
-    "sevilla",
-    "gibraltar",
-    "granada",
-    "amsterdam",
-    "paris",
-    "rome",
-    "berlin",
-    "london",
-    "barcelona",
-    "copenhagen",
-    "lisbon",
-    "dublin",
-    "edinburgh",
-    "stockholm",
-    "istanbul",
-    "athens",
-    "monaco",
-    "lucerne",
-    "bruges",
-    "madrid",
-    "geneva",
-    "liverpool",
-  ];
+export const PLACE_IDS = [
+  "zaragoza",
+  "montpellier",
+  "burgos",
+  "toulouse",
+  "sanSebastian",
+  "pau",
+  "bordeaux",
+  "nantes",
+  "lyon",
+  "porto",
+  "sevilla",
+  "gibraltar",
+  "granada",
+  "amsterdam",
+  "paris",
+  "rome",
+  "berlin",
+  "london",
+  "barcelona",
+  "copenhagen",
+  "lisbon",
+  "dublin",
+  "edinburgh",
+  "stockholm",
+  "istanbul",
+  "athens",
+  "monaco",
+  "lucerne",
+  "bruges",
+  "madrid",
+  "geneva",
+  "liverpool",
+] as const;
 
-export const COUNTRIES_ALPHA3:
-  | readonly [string, ...string[]]
-  | [string, ...string[]] = [
+export const COUNTRIES_ALPHA3 = [
   "AFG",
   "ALA",
   "ALB",
@@ -308,4 +302,4 @@ export const COUNTRIES_ALPHA3:
   "YEM",
   "ZMB",
   "ZWE",
-];
+] as const;

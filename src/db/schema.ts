@@ -17,6 +17,11 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
+const actionTypeEnum = mysqlEnum("type", ACTION_TYPES);
+export type ActionType = (typeof ACTION_TYPES)[number];
+const placeIdEnum = mysqlEnum("move_to", PLACE_IDS);
+export type PlaceId = (typeof PLACE_IDS)[number];
+
 const updatedAndCreatedAt = {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
@@ -113,9 +118,9 @@ export const actionTable = mysqlTable(
     year: int("year").notNull(),
     round: int("round").notNull(),
     turn: int("turn").notNull(),
-    type: mysqlEnum("type", ACTION_TYPES).notNull(),
+    type: actionTypeEnum.notNull(),
     cashAmount: int("cash_amount"),
-    moveTo: mysqlEnum("move_to", PLACE_IDS),
+    moveTo: placeIdEnum,
     itemId: varchar("item_id", {
       length: 36,
     }),
