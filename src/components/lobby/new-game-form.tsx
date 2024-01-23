@@ -9,9 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { createNewGame } from "@/app/actions";
+import SubmitButton from "../submit-button";
 
 const items = [
   { id: "noBot", label: "No Bot" },
@@ -88,7 +88,7 @@ export function NewGameForm() {
           </SelectContent>
         </Select>
       </div>
-      <Button type="submit">Submit</Button>
+      <SubmitButton />
     </form>
   );
 }

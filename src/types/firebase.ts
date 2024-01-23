@@ -9,7 +9,7 @@ export interface GameState {
   goal?: PlaceId;
   order: string[];
   isBotTurn?: boolean;
-  state?: "beforeGame" | "playing" | "afterGame";
+  state: "beforeGame" | "playing" | "afterGame";
   players: {
     [playerId: string]: {
       position?: PlaceId;

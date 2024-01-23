@@ -30,6 +30,7 @@ export async function createNewGame(formData: FormData) {
     round: 1,
     turn: 1,
     order: [user.uid],
+    state: "beforeGame",
     players: {
       [user.uid]: {
         position: "geneva",

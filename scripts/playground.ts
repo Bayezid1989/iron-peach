@@ -40,12 +40,15 @@ const ref = realtimeDb.ref("rooms");
   // );
 
   const roomRef = ref.child("testId");
-  await roomRef.update(
-    {
-      order: ["visitor1", "visitor2", "visitor3"],
-    },
-    () => {
-      console.log("Data updated successfully.");
-    },
-  );
+  // await roomRef.update(
+  //   {
+  //     order: ["visitor1", "visitor2", "visitor3"],
+  //   },
+  //   () => {
+  //     console.log("Data updated successfully.");
+  //   },
+  // );
+  roomRef.remove(() => {
+    console.log("Data removed successfully.");
+  });
 })();
