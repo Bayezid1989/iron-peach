@@ -21,6 +21,8 @@ const actionTypeEnum = mysqlEnum("type", ACTION_TYPES);
 export type ActionType = (typeof ACTION_TYPES)[number];
 const placeIdEnum = mysqlEnum("move_to", PLACE_IDS);
 export type PlaceId = (typeof PLACE_IDS)[number];
+const mapTypeEnum = mysqlEnum("map_type", MAP_TYPES);
+export type MapType = (typeof MAP_TYPES)[number];
 
 const updatedAndCreatedAt = {
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -53,7 +55,7 @@ export const gameTable = mysqlTable(
       length: ID_LENGTH.nano,
     }).primaryKey(),
     totalYears: int("total_years").notNull(),
-    mapType: mysqlEnum("map_type", MAP_TYPES).notNull(),
+    mapType: mapTypeEnum.notNull(),
     ownerId: varchar("owner_id", {
       length: ID_LENGTH.uid,
     }).notNull(),
