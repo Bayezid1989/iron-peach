@@ -27,18 +27,6 @@ export const callLoginApi = async (userCreds: UserCredential) => {
   return response.ok && resBody.success;
 };
 
-export const callLoginApiFromRedirect = async () => {
-  try {
-    const result = await getRedirectResult(auth);
-    if (result?.user) {
-      return callLoginApi(result);
-    }
-  } catch (error) {
-    console.error("Error signing in with Google", error);
-    return false;
-  }
-};
-
 export async function callLogout() {
   try {
     await auth.signOut();

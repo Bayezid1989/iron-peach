@@ -5,6 +5,7 @@ export default function HeaderLayout({
 }: {
   children: React.ReactNode;
 }) {
+  console.log("HeaderLayout");
   return (
     <div className="flex flex-col w-full">
       <SiteHeader />

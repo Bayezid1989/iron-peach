@@ -2,7 +2,7 @@
 
 import { ID_LENGTH } from "@/constants/db";
 import { db } from "@/db";
-import { gameTable, playerTable } from "@/db/schema";
+import { gameTable, playerTable, userTable } from "@/db/schema";
 import { getCurrentUser } from "@/lib/firebase-admin/auth";
 import { getDocRef } from "@/lib/firebase-admin/realtimeDb";
 import { GameState } from "@/types/firebase";

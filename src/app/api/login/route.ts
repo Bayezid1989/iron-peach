@@ -11,6 +11,7 @@ export async function POST(request: NextRequest) {
 
   const sessionCookie = await createSessionCookie(idToken, { expiresIn });
 
+  console.log("Cookie set ");
   cookies().set("__session", sessionCookie, {
     maxAge: expiresIn,
     httpOnly: true,
