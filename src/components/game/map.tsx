@@ -1,7 +1,10 @@
+import "mapbox-gl/dist/mapbox-gl.css";
 import { MAP_STYLES } from "@/constants";
 import { PlaceFeatureCollection, RouteFeatureCollection } from "@/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import MapGl, { Layer, NavigationControl, Source } from "react-map-gl";
+import placeGeo from "@/json/placeGeo.json";
+import routeGeo from "@/json/routeGeo.json";
 
 const defaultPosition = {
   longitude: 23.727539,
@@ -12,17 +15,8 @@ const defaultPosition = {
 
 export default function Map() {
   const [viewState, setViewState] = useState(defaultPosition);
-  const [places, setPlaces] = useState<PlaceFeatureCollection | undefined>();
-  const [routes, setRoutes] = useState<RouteFeatureCollection | undefined>();
-
-  useEffect(() => {
-    import("@/json/placeGeo.json").then((module) => {
-      setPlaces(module.default as PlaceFeatureCollection);
-    });
-    import("@/json/routeGeo.json").then((module) => {
-      setRoutes(module.default as RouteFeatureCollection);
-    });
-  }, []);
+  const [places, setPlaces] = useState(placeGeo as PlaceFeatureCollection);
+  const [routes, setRoutes] = useState(routeGeo as RouteFeatureCollection);
 
   return (
     <MapGl
