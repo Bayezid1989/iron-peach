@@ -1,0 +1,366 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -3.70379,
+            40.416775
+          ],
+          [
+            -3.696906,
+            42.343479
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -3.70379,
+            40.416775
+          ],
+          [
+            -0.889085,
+            41.648823
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -3.696906,
+            42.343479
+          ],
+          [
+            -1.981231,
+            43.318334
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -0.889085,
+            41.648823
+          ],
+          [
+            2.154007,
+            41.390205
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            2.154007,
+            41.390205
+          ],
+          [
+            1.444209,
+            43.604652
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            1.444209,
+            43.604652
+          ],
+          [
+            3.876716,
+            43.610769
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            4.835659,
+            45.764043
+          ],
+          [
+            3.876716,
+            43.610769
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            4.835659,
+            45.764043
+          ],
+          [
+            6.143158,
+            46.204391
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -1.981231,
+            43.318334
+          ],
+          [
+            -0.370089,
+            43.296482
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -0.370089,
+            43.296482
+          ],
+          [
+            -0.57918,
+            44.837789
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -0.57918,
+            44.837789
+          ],
+          [
+            -1.553621,
+            47.218371
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -1.553621,
+            47.218371
+          ],
+          [
+            2.349014,
+            48.864716
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            4.835659,
+            45.764043
+          ],
+          [
+            2.349014,
+            48.864716
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -3.70379,
+            40.416775
+          ],
+          [
+            -8.629105,
+            41.157944
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -8.629105,
+            41.157944
+          ],
+          [
+            -9.142685,
+            38.736946
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -9.142685,
+            38.736946
+          ],
+          [
+            -5.984459,
+            37.389092
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -5.984459,
+            37.389092
+          ],
+          [
+            -5.353585,
+            36.140751
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -5.984459,
+            37.389092
+          ],
+          [
+            -3.598557,
+            37.177336
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -3.598557,
+            37.177336
+          ],
+          [
+            -3.70379,
+            40.416775
+          ]
+        ]
+      },
+      "properties": {
+        "kind": "land"
+      }
+    }
+  ]
+}

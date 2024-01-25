@@ -9,7 +9,7 @@ export default function HeaderLayout({
   return (
     <div className="flex flex-col w-full">
       <SiteHeader />
-      <div className="p-4 sm:p-6">{children}</div>
+      <div className="container py-6">{children}</div>
     </div>
   );
 }

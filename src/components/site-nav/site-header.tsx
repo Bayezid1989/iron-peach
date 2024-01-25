@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function SiteHeader() {
   return (
-    <header className="px-4 lg:container supports-backdrop-blur:bg-background/60 sticky top-0 z-20 w-full bg-background/95 backdrop-blur">
+    <header className="container supports-backdrop-blur:bg-background/60 sticky top-0 z-20 w-full bg-background/95 backdrop-blur">
       <div className="flex h-14 items-center justify-between">
         <DesktopNav />
         <MobileNav />

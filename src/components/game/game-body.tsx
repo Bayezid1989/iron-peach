@@ -29,17 +29,15 @@ type Props = {
 
 export default function GameBody({ uid, game }: Props) {
   const player = game.players.find((player) => player.user.id === uid);
-
   return (
-    <main className="w-full h-full relative">
+    <main className="w-screen h-screen relative">
       <Map />
+
       <Card className="absolute top-3 left-3">
         <CardHeader>
           <CardTitle>{getGameTimeText(1, 1, game.totalYears)}</CardTitle>
           <CardDescription>
-            <p>
-              Current Goal: <strong>Johannesburg</strong>
-            </p>
+            Current Goal: <strong>Johannesburg</strong>
           </CardDescription>
         </CardHeader>
       </Card>

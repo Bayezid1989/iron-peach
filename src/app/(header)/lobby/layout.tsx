@@ -6,9 +6,9 @@ export default function LobbyLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex">
+    <div className="flex gap-x-8">
       <Sidebar className="hidden lg:block" />
-      <div className="w-full">{children}</div>
+      <main className="w-full">{children}</main>
     </div>
   );
 }
