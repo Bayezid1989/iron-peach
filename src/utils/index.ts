@@ -1,3 +1,12 @@
+import { ERRORS } from "@/constants/dictionary/errors";
+
+export class HandledError extends Error {
+  name = "HandledError";
+  constructor(public message: keyof typeof ERRORS) {
+    super(message);
+  }
+}
+
 export const getStThNd = (number: number, onlySuffix?: boolean): string => {
   const j = number % 10;
   const k = number % 100;

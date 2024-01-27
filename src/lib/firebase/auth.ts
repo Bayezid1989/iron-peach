@@ -14,19 +14,6 @@ export const loginWithPopup = async (provider: keyof typeof authProviders) =>
 export const loginWithRedirect = async (provider: keyof typeof authProviders) =>
   signInWithRedirect(auth, authProviders[provider]);
 
-export const callLoginApi = async (userCreds: UserCredential) => {
-  const idToken = await userCreds.user.getIdToken();
-  const response = await fetch("/api/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ idToken }),
-  });
-  const resBody = (await response.json()) as unknown as APIResponse<string>;
-  return response.ok && resBody.success;
-};
-
 export async function callLogout() {
   try {
     await auth.signOut();

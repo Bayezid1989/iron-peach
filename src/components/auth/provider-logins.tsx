@@ -5,38 +5,21 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/ui/icons";
 import { DEVICE_WIDTH } from "@/constants";
 import { auth, authProviders } from "@/lib/firebase/init";
-import {
-  callLoginApi,
-  loginWithPopup,
-  loginWithRedirect,
-} from "@/lib/firebase/auth";
-import { useCallback, useEffect } from "react";
+import { loginWithPopup, loginWithRedirect } from "@/lib/firebase/auth";
+import { useEffect } from "react";
 import useWindowSize from "@/hooks/useWindowSize";
 import { useToast } from "../ui/use-toast";
-import { FirebaseError } from "firebase/app";
 import { getRedirectResult } from "firebase/auth";
+import { setSessionCookie } from "@/server/actions/auth";
+import useErrorToast from "@/hooks/useErrorToast";
 
 export function ProviderLogins() {
   const { replace, push } = useRouter();
   const [innerWidth] = useWindowSize();
-  const { toast } = useToast();
   const pathname = usePathname();
   const params = useSearchParams();
   const redirect = params.get("redirect");
-
-  const handleError = useCallback(
-    (error: unknown) => {
-      if (error instanceof FirebaseError) {
-        toast({ title: error?.code, description: error.message });
-      } else {
-        toast({
-          title: "Unexpected Error",
-          description: JSON.stringify(error),
-        });
-      }
-    },
-    [toast],
-  );
+  const { handleError } = useErrorToast();
 
   const handleProviderLogin = async (provider: keyof typeof authProviders) => {
     const isMobile = innerWidth < DEVICE_WIDTH.sm;
@@ -47,7 +30,8 @@ export function ProviderLogins() {
         loginWithRedirect(provider);
       } else {
         const userCreds = await loginWithPopup(provider);
-        const isOk = await callLoginApi(userCreds);
+        const idToken = await userCreds.user.getIdToken();
+        const isOk = await setSessionCookie(idToken);
         if (isOk) {
           push("/lobby");
         }
@@ -61,11 +45,13 @@ export function ProviderLogins() {
     if (redirect === "google" || redirect === "twitter") {
       const handleRedirectResult = async () => {
         try {
-          const result = await getRedirectResult(auth);
-          if (result?.user) {
-            callLoginApi(result).then((isOk) => {
-              if (isOk) push("/lobby");
-            });
+          const userCreds = await getRedirectResult(auth);
+          if (userCreds?.user) {
+            const idToken = await userCreds.user.getIdToken();
+            const isOk = await setSessionCookie(idToken);
+            if (isOk) {
+              push("/lobby");
+            }
           }
         } catch (error) {
           handleError(error);

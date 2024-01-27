@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getCurrentUser } from "@/lib/firebase-admin/auth";
+import { getCurrentUser } from "@/server/firebase-admin/auth";
 import { LogoutMenuItem } from "@/components/auth/logout-menu-item";
 import Link from "next/link";
 

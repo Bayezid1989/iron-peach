@@ -10,6 +10,8 @@ import { getGameTimeText } from "@/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { MapType } from "@/db/schema";
 import Map from "./map";
+import { useEffect } from "react";
+import { honoClient } from "@/lib/hono";
 
 type Props = {
   uid: string;
@@ -29,6 +31,7 @@ type Props = {
 
 export default function GameBody({ uid, game }: Props) {
   const player = game.players.find((player) => player.user.id === uid);
+
   return (
     <main className="w-screen h-screen relative">
       <Map />

@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { notFound, redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/firebase-admin/auth";
+import { getCurrentUser } from "@/server/firebase-admin/auth";
 import GameBody from "@/components/game/game-body";
 
 type Props = {

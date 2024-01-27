@@ -3,8 +3,8 @@
 import { ID_LENGTH } from "@/constants/db";
 import { db } from "@/db";
 import { gameTable, playerTable, userTable } from "@/db/schema";
-import { getCurrentUser } from "@/lib/firebase-admin/auth";
-import { getDocRef } from "@/lib/firebase-admin/realtimeDb";
+import { getCurrentUser } from "@/server/firebase-admin/auth";
+import { getDocRef } from "@/server/firebase-admin/realtimeDb";
 import { GameState } from "@/types/firebase";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
