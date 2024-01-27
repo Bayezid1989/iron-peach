@@ -1,4 +1,4 @@
-import { db } from "@/db";
+import { db } from "@/server/db";
 import { notFound, redirect } from "next/navigation";
 import { getCurrentUser } from "@/server/firebase-admin/auth";
 import GameBody from "@/components/game/game-body";

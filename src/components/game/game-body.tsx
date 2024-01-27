@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { getGameTimeText } from "@/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import type { MapType } from "@/db/schema";
+import type { MapType } from "@/server/db/schema";
 import Map from "./map";
 import { useEffect } from "react";
 import { honoClient } from "@/lib/hono";

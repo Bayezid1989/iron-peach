@@ -1,8 +1,8 @@
 "use server";
 
 import { ID_LENGTH } from "@/constants/db";
-import { db } from "@/db";
-import { gameTable, playerTable, userTable } from "@/db/schema";
+import { db } from "@/server/db";
+import { gameTable, playerTable, userTable } from "@/server/db/schema";
 import { getCurrentUser } from "@/server/firebase-admin/auth";
 import { getDocRef } from "@/server/firebase-admin/realtimeDb";
 import { GameState } from "@/types/firebase";

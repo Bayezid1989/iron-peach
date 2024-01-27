@@ -5,7 +5,7 @@ import {
   ID_LENGTH,
   MAP_TYPES,
   PLACE_IDS,
-} from "../constants/db";
+} from "../../constants/db";
 // Use relative path instead of absolute path for drizzle kit
 
 import {
@@ -29,6 +29,7 @@ export type MapType = (typeof MAP_TYPES)[number];
 const updatedAndCreatedAt = {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  deletedAt: timestamp("deleted_at"),
 };
 
 const userId = varchar("user_id", {

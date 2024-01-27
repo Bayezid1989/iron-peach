@@ -1,4 +1,4 @@
-import type { ActionType, PlaceId } from "@/db/schema";
+import type { ActionType, PlaceId } from "@/server/db/schema";
 
 export type FirebaseCollection = "games" | "rooms";
 
