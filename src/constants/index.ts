@@ -1,4 +1,4 @@
-import { Environment } from "@/types";
+import { Environment, PlaceRole } from "@/types";
 import { User, Users } from "lucide-react";
 
 export const SITE_CONFIG = {
@@ -42,4 +42,11 @@ export const DEVICE_WIDTH = {
   lg: 1024,
   md: 768,
   sm: 640,
+};
+
+export const ICON_MAP: Record<PlaceRole, string> = {
+  asset: "indigo-circle",
+  income: "emerald-circle",
+  expense: "rose-circle",
+  item: "yellow-circle",
 };
