@@ -67,13 +67,11 @@ export const getGameTimeText = (
 };
 
 export const convertPrice = (kPrice: number) => {
-  if (kPrice < 1000) {
-    return `${kPrice}K$`;
-  } else if (kPrice < 1000000) {
-    return `${kPrice / 1000}M$`;
-  } else if (kPrice < 1000000000) {
-    return `${kPrice / 1000000}B$`;
-  } else {
-    return `${kPrice / 1000000000}T$`;
-  }
+  return `${kPrice.toLocaleString()}K$`;
 };
+
+export const convetToPercent = (number: number) =>
+  `${Math.round(number * 100)}%`;
+
+export const pickRandom = <T>(array: T[]): T =>
+  array[Math.floor(Math.random() * array.length)];

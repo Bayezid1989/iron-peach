@@ -10,14 +10,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
-import { createNewGame } from "@/app/actions";
+import { createNewGame } from "@/server/actions/game";
 import SubmitButton from "../submit-button";
+import { PLACE_NAME_DICTIONARY } from "@/constants/dictionary/map";
+import { START_PLACE_OPTIONS } from "@/constants";
 
 const items = [
-  { id: "noBot", label: "No Bot" },
-  { id: "1Bot", label: "1 Bot", disabled: true },
-  { id: "2Bots", label: "2 Bots", disabled: true },
-  { id: "3Bots", label: "3 Bots", disabled: true },
+  { id: "0", label: "No Bot" },
+  { id: "1", label: "1 Bot", disabled: true },
+  { id: "2", label: "2 Bots", disabled: true },
+  { id: "3", label: "3 Bots", disabled: true },
 ];
 
 export function NewGameForm() {
@@ -82,6 +84,32 @@ export function NewGameForm() {
               return (
                 <SelectItem key={i} value={`${value}`}>
                   {`${value} year${i === 0 ? "" : "s"} (${value * 12} rounds)`}
+                </SelectItem>
+              );
+            })}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="grid gap-2">
+        <div>
+          <Label htmlFor="year" className="text-lg">
+            Start Place
+          </Label>
+          <p className="text-sm text-slate-500">
+            Choose which place to start at.
+          </p>
+        </div>
+        <Select name="startPlace" defaultValue="random">
+          <SelectTrigger>
+            <SelectValue placeholder="Start Place" />
+          </SelectTrigger>
+          <SelectContent>
+            {START_PLACE_OPTIONS.map((value, i) => {
+              return (
+                <SelectItem key={value} value={value}>
+                  {value === "random"
+                    ? "Random"
+                    : PLACE_NAME_DICTIONARY[value].en}
                 </SelectItem>
               );
             })}

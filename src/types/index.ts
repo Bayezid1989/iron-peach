@@ -1,7 +1,9 @@
-import { PlaceId } from "@/server/db/schema";
+import type { ACTION_TYPES, MAP_TYPES, PLACE_IDS } from "@/constants/db";
 
 export type Environment = "production" | "preview" | "development";
-
+export type PlaceId = (typeof PLACE_IDS)[number];
+export type ActionType = (typeof ACTION_TYPES)[number];
+export type MapType = (typeof MAP_TYPES)[number];
 export type PlaceRole = "asset" | "income" | "expense" | "item";
 export type PlaceCategory = "city" | "town" | "store"; // Size or category of the place
 export type CashVolume = "low" | "medium" | "high"; // For income and expense places
@@ -12,15 +14,25 @@ export type Asset = {
   profitRate: number;
 };
 
-type ConditionalAppConfig =
-  | { role: "asset"; assets: Asset[] }
-  | { role: "income" | "expense"; cashVolume: CashVolume }
-  | { role: "item"; items: string[] };
+type Coordinates = { lat: number; lng: number };
 
-export type AppPlaceConfig = {
+export type AssetPlace = {
+  coordinates: Coordinates;
+  role: "asset";
+  assets: Asset[];
+};
+
+export type IncomeExpensePlace = {
   coordinates: { lat: number; lng: number };
-  role: PlaceRole;
-} & ConditionalAppConfig;
+  role: "income" | "expense";
+  cashVolume: CashVolume;
+};
+
+export type ItemPlace = {
+  coordinates: { lat: number; lng: number };
+  role: "item";
+  items: string[];
+};
 
 export type APIResponse<T> =
   | { success: true; data: T }

@@ -1,3 +1,5 @@
+"use client";
+
 import "mapbox-gl/dist/mapbox-gl.css";
 import { ICON_MAP, MAP_STYLES } from "@/constants";
 import { useState } from "react";
@@ -8,7 +10,8 @@ import MapGl, {
   Source,
 } from "react-map-gl";
 import { generatePlaceGeoJson, generateRouteGeoJson } from "@/lib/geoJson";
-import { PlaceFeature } from "@/types";
+import { PlaceFeature, PlaceId } from "@/types";
+import AssetSheet from "./asset-sheet";
 
 const defaultPosition = {
   longitude: 23.727539,
@@ -32,6 +35,7 @@ export default function Map() {
   const [viewState, setViewState] = useState(defaultPosition);
   const [places] = useState(generatePlaceGeoJson());
   const [routes] = useState(generateRouteGeoJson());
+  const [assetPlaceId, setAssetPlaceId] = useState<PlaceId | null>(null);
 
   return (
     <MapGl
@@ -57,7 +61,7 @@ export default function Map() {
         const assetPeoperties = getAssetProperties(e);
         if (assetPeoperties) {
           e.preventDefault();
-          console.log(assetPeoperties.placeId);
+          setAssetPlaceId(assetPeoperties.placeId as PlaceId);
         }
       }}
     >
@@ -69,21 +73,6 @@ export default function Map() {
         tileSize={512}
         maxzoom={14}
       />
-      <Source id="places" type="geojson" data={places}>
-        <Layer
-          id="places"
-          type="symbol"
-          source="places"
-          layout={{
-            "icon-image": ["get", "icon"],
-            "text-size": 16,
-            "text-field": ["get", "name"],
-            // 'text-font': ['Open Sans Semibold'],
-            "text-offset": [0, 0.8],
-            "text-anchor": "top",
-          }}
-        />
-      </Source>
       <Source id="routes" type="geojson" data={routes}>
         <Layer
           id="routes"
@@ -99,6 +88,22 @@ export default function Map() {
           }}
         />
       </Source>
+      <Source id="places" type="geojson" data={places}>
+        <Layer
+          id="places"
+          type="symbol"
+          source="places"
+          layout={{
+            "icon-image": ["get", "icon"],
+            "text-size": 16,
+            "text-field": ["get", "name"],
+            // 'text-font': ['Open Sans Semibold'],
+            "text-offset": [0, 0.8],
+            "text-anchor": "top",
+          }}
+        />
+      </Source>
+      <AssetSheet placeId={assetPlaceId} setPlaceId={setAssetPlaceId} />
     </MapGl>
   );
 }

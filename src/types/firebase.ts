@@ -1,4 +1,4 @@
-import type { ActionType, PlaceId } from "@/server/db/schema";
+import type { PlaceId, ActionType } from ".";
 
 export type FirebaseCollection = "games" | "rooms";
 
@@ -12,7 +12,7 @@ export interface GameState {
   state: "beforeGame" | "playing" | "afterGame";
   players: {
     [playerId: string]: {
-      position?: PlaceId;
+      place?: PlaceId;
       balance: number;
       action?: ActionType;
       movedTo?: PlaceId;

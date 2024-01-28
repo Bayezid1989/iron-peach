@@ -19,16 +19,10 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-const actionTypeEnum = mysqlEnum("type", ACTION_TYPES);
-export type ActionType = (typeof ACTION_TYPES)[number];
-const placeIdEnum = mysqlEnum("move_to", PLACE_IDS);
-export type PlaceId = (typeof PLACE_IDS)[number];
-const mapTypeEnum = mysqlEnum("map_type", MAP_TYPES);
-export type MapType = (typeof MAP_TYPES)[number];
-
 const updatedAndCreatedAt = {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+  deletedAt: timestamp("deleted_at"),
 };
 
 const userId = varchar("user_id", {
@@ -58,7 +52,10 @@ export const gameTable = mysqlTable(
       length: ID_LENGTH.nano,
     }).primaryKey(),
     totalYears: int("total_years").notNull(),
-    mapType: mapTypeEnum.notNull(),
+    mapType: mysqlEnum("map_type", MAP_TYPES).notNull(),
+    startPlace: mysqlEnum("start_place", [...PLACE_IDS, "random"])
+      .notNull()
+      .default("random"),
     ownerId: varchar("owner_id", {
       length: ID_LENGTH.uid,
     }).notNull(),
@@ -123,9 +120,9 @@ export const actionTable = mysqlTable(
     year: int("year").notNull(),
     round: int("round").notNull(),
     turn: int("turn").notNull(),
-    type: actionTypeEnum.notNull(),
+    type: mysqlEnum("type", ACTION_TYPES).notNull(),
     cashAmount: int("cash_amount"),
-    moveTo: placeIdEnum,
+    moveTo: mysqlEnum("move_to", PLACE_IDS),
     itemId: varchar("item_id", {
       length: 36,
     }),

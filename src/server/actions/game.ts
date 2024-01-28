@@ -1,14 +1,23 @@
 "use server";
 
-import { ID_LENGTH } from "@/constants/db";
+import { START_PLACES } from "@/constants";
+import { ID_LENGTH, PLACE_IDS } from "@/constants/db";
 import { db } from "@/server/db";
-import { gameTable, playerTable, userTable } from "@/server/db/schema";
+import { gameTable, playerTable } from "@/server/db/schema";
 import { getCurrentUser } from "@/server/firebase-admin/auth";
 import { getDocRef } from "@/server/firebase-admin/realtimeDb";
 import { GameState } from "@/types/firebase";
+import { pickRandom } from "@/utils";
 import { eq } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { redirect } from "next/navigation";
+import { z } from "zod";
+
+const gameSchema = z.object({
+  bots: z.number(),
+  year: z.number(),
+  startPlace: z.enum([...PLACE_IDS, "random"]),
+});
 
 export async function createNewGame(formData: FormData) {
   const user = await getCurrentUser();
@@ -18,12 +27,18 @@ export async function createNewGame(formData: FormData) {
     };
   }
 
-  const rawFormData = {
-    bots: formData.get("bots"),
-    year: formData.get("year"),
-  };
+  const validatedFormData = gameSchema.parse({
+    bots: Number(formData.get("bots")),
+    year: Number(formData.get("year")),
+    startPlace: formData.get("startPlace"),
+  });
 
   const id = nanoid(ID_LENGTH.nano);
+
+  const actualStartPlace =
+    validatedFormData.startPlace === "random"
+      ? pickRandom(START_PLACES)
+      : validatedFormData.startPlace;
 
   const gameDoc: GameState = {
     year: 1,
@@ -33,7 +48,7 @@ export async function createNewGame(formData: FormData) {
     state: "beforeGame",
     players: {
       [user.uid]: {
-        position: "geneva",
+        place: actualStartPlace,
         balance: 1000,
         assets: {},
       },
@@ -44,9 +59,10 @@ export async function createNewGame(formData: FormData) {
     db.transaction(async (tx) => {
       await tx.insert(gameTable).values({
         id,
-        totalYears: Number(rawFormData.year),
+        totalYears: validatedFormData.year,
         ownerId: user.uid,
         mapType: "world",
+        startPlace: validatedFormData.startPlace,
       });
       await tx.insert(playerTable).values({ userId: user.uid, gameId: id });
     }),

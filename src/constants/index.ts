@@ -1,4 +1,4 @@
-import { Environment, PlaceRole } from "@/types";
+import { Environment, PlaceId, PlaceRole } from "@/types";
 import { User, Users } from "lucide-react";
 
 export const SITE_CONFIG = {
@@ -50,3 +50,10 @@ export const ICON_MAP: Record<PlaceRole, string> = {
   expense: "rose-circle",
   item: "yellow-circle",
 };
+
+export const START_PLACES: PlaceId[] = ["paris", "lisbon", "geneva"];
+
+export const START_PLACE_OPTIONS: (PlaceId | "random")[] = [
+  "random",
+  ...START_PLACES,
+];

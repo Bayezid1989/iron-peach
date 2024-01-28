@@ -1,5 +1,21 @@
 import { db } from "@/server/db";
 
+export const getGame = async (gameId: string) => {
+  const game = await db.query.gameTable.findFirst({
+    where: (gameTable, { eq }) => eq(gameTable.id, gameId),
+    with: {
+      players: {
+        columns: { order: true },
+        with: {
+          user: { columns: { id: true, username: true, imageUrl: true } },
+        },
+      },
+    },
+    columns: { totalYears: true, mapType: true },
+  });
+  return game;
+};
+
 export const getSingleplayerGames = async (
   userId: string,
   limit: number,

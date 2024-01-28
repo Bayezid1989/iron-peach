@@ -1,46 +1,61 @@
 "use client";
 
+import useSWRSubscription, { SWRSubscriptionOptions } from "swr/subscription";
 import {
   Card,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getGameTimeText } from "@/utils";
+import { convertPrice, getGameTimeText } from "@/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import type { MapType } from "@/server/db/schema";
 import Map from "./map";
-import { useEffect } from "react";
-import { honoClient } from "@/lib/hono";
+import { getGame } from "@/server/queries/game";
+import { realtimeDb } from "@/lib/firebase/init";
+import { off, onValue, ref } from "firebase/database";
+import { GameState } from "@/types/firebase";
+import { PLACE_NAME_DICTIONARY } from "@/constants/dictionary/map";
 
 type Props = {
   uid: string;
-  game: {
-    totalYears: number;
-    mapType: MapType;
-    players: {
-      order: number | null;
-      user: {
-        id: string;
-        username: string;
-        imageUrl: string | null;
-      };
-    }[];
-  };
+  game: Awaited<ReturnType<typeof getGame>>;
+  gameId: string;
 };
 
-export default function GameBody({ uid, game }: Props) {
+export default function GameBody({ uid, game, gameId }: Props) {
+  const { data: gameState, error } = useSWRSubscription(
+    ["game", gameId],
+    ([_, id], { next }: SWRSubscriptionOptions<GameState, Error>) => {
+      const gameRef = ref(realtimeDb, `games/${id}`);
+      onValue(
+        gameRef,
+        (snapshot) => next(null, snapshot.val()),
+        (err) => next(err),
+      );
+
+      return () => off(gameRef);
+    },
+  );
+  console.log("Listen data", gameState);
+  console.log("Listen error", error);
+
+  // TODO: Add goal set roulette
+  // TODO: add game buttons
+
+  if (!game || !gameState) return null;
   const player = game.players.find((player) => player.user.id === uid);
 
   return (
     <main className="w-screen h-screen relative">
       <Map />
-
       <Card className="absolute top-3 left-3">
         <CardHeader>
           <CardTitle>{getGameTimeText(1, 1, game.totalYears)}</CardTitle>
           <CardDescription>
-            Current Goal: <strong>Johannesburg</strong>
+            Current Goal:
+            <strong>
+              {PLACE_NAME_DICTIONARY[gameState.goal!]?.en || "Johannesburg"}
+            </strong>
           </CardDescription>
         </CardHeader>
       </Card>
@@ -66,7 +81,9 @@ export default function GameBody({ uid, game }: Props) {
           </div>
           <div className="flex space-x-4">
             <small>
-              <strong>10,000</strong> dollars
+              <strong>
+                {convertPrice(gameState.players[player?.user.id!].balance)}
+              </strong>
             </small>
             <small>
               <strong>24</strong> steps to the goal

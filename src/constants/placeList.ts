@@ -1,6 +1,6 @@
-import { AppPlaceConfig } from "@/types";
+import { AssetPlace, IncomeExpensePlace, ItemPlace, PlaceId } from "@/types";
 
-export const ASSET_PLACES: Record<string, AppPlaceConfig> = {
+export const ASSET_PLACES: { [key in PlaceId]?: AssetPlace } = {
   amsterdam: {
     coordinates: {
       lat: 52.377956,
@@ -547,114 +547,115 @@ export const ASSET_PLACES: Record<string, AppPlaceConfig> = {
   },
 };
 
-export const INCOME_EXPENSE_PLACES: Record<string, AppPlaceConfig> = {
-  zaragoza: {
-    coordinates: {
-      lat: 41.648823,
-      lng: -0.889085,
+export const INCOME_EXPENSE_PLACES: { [key in PlaceId]?: IncomeExpensePlace } =
+  {
+    zaragoza: {
+      coordinates: {
+        lat: 41.648823,
+        lng: -0.889085,
+      },
+      role: "income",
+      cashVolume: "low",
     },
-    role: "income",
-    cashVolume: "low",
-  },
-  montpellier: {
-    coordinates: {
-      lat: 43.610769,
-      lng: 3.876716,
+    montpellier: {
+      coordinates: {
+        lat: 43.610769,
+        lng: 3.876716,
+      },
+      role: "income",
+      cashVolume: "low",
     },
-    role: "income",
-    cashVolume: "low",
-  },
-  burgos: {
-    coordinates: {
-      lat: 42.343479,
-      lng: -3.696906,
+    burgos: {
+      coordinates: {
+        lat: 42.343479,
+        lng: -3.696906,
+      },
+      role: "income",
+      cashVolume: "low",
     },
-    role: "income",
-    cashVolume: "low",
-  },
-  toulouse: {
-    coordinates: {
-      lat: 43.604652,
-      lng: 1.444209,
+    toulouse: {
+      coordinates: {
+        lat: 43.604652,
+        lng: 1.444209,
+      },
+      role: "income",
+      cashVolume: "low",
     },
-    role: "income",
-    cashVolume: "low",
-  },
-  sanSebastian: {
-    coordinates: {
-      lat: 43.318334,
-      lng: -1.981231,
+    sanSebastian: {
+      coordinates: {
+        lat: 43.318334,
+        lng: -1.981231,
+      },
+      role: "expense",
+      cashVolume: "medium",
     },
-    role: "expense",
-    cashVolume: "medium",
-  },
-  pau: {
-    coordinates: {
-      lat: 43.296482,
-      lng: -0.370089,
+    pau: {
+      coordinates: {
+        lat: 43.296482,
+        lng: -0.370089,
+      },
+      role: "income",
+      cashVolume: "low",
     },
-    role: "income",
-    cashVolume: "low",
-  },
-  bordeaux: {
-    coordinates: {
-      lat: 44.837789,
-      lng: -0.57918,
+    bordeaux: {
+      coordinates: {
+        lat: 44.837789,
+        lng: -0.57918,
+      },
+      role: "expense",
+      cashVolume: "medium",
     },
-    role: "expense",
-    cashVolume: "medium",
-  },
-  nantes: {
-    coordinates: {
-      lat: 47.218371,
-      lng: -1.553621,
+    nantes: {
+      coordinates: {
+        lat: 47.218371,
+        lng: -1.553621,
+      },
+      role: "income",
+      cashVolume: "medium",
     },
-    role: "income",
-    cashVolume: "medium",
-  },
-  lyon: {
-    coordinates: {
-      lat: 45.764043,
-      lng: 4.835659,
+    lyon: {
+      coordinates: {
+        lat: 45.764043,
+        lng: 4.835659,
+      },
+      role: "expense",
+      cashVolume: "medium",
     },
-    role: "expense",
-    cashVolume: "medium",
-  },
-  porto: {
-    coordinates: {
-      lat: 41.157944,
-      lng: -8.629105,
+    porto: {
+      coordinates: {
+        lat: 41.157944,
+        lng: -8.629105,
+      },
+      role: "income",
+      cashVolume: "low",
     },
-    role: "income",
-    cashVolume: "low",
-  },
-  sevilla: {
-    coordinates: {
-      lat: 37.389092,
-      lng: -5.984459,
+    sevilla: {
+      coordinates: {
+        lat: 37.389092,
+        lng: -5.984459,
+      },
+      role: "expense",
+      cashVolume: "medium",
     },
-    role: "expense",
-    cashVolume: "medium",
-  },
-  gibraltar: {
-    coordinates: {
-      lat: 36.140751,
-      lng: -5.353585,
+    gibraltar: {
+      coordinates: {
+        lat: 36.140751,
+        lng: -5.353585,
+      },
+      role: "income",
+      cashVolume: "low",
     },
-    role: "income",
-    cashVolume: "low",
-  },
-  granada: {
-    coordinates: {
-      lat: 37.177336,
-      lng: -3.598557,
+    granada: {
+      coordinates: {
+        lat: 37.177336,
+        lng: -3.598557,
+      },
+      role: "expense",
+      cashVolume: "medium",
     },
-    role: "expense",
-    cashVolume: "medium",
-  },
-};
+  };
 
-export const ITEM_PLACES: Record<string, AppPlaceConfig> = {
+export const ITEM_PLACES: { [key in PlaceId]?: ItemPlace } = {
   madrid: {
     coordinates: {
       lat: 40.416775,

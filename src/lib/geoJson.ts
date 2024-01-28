@@ -2,10 +2,10 @@ import { ICON_MAP } from "@/constants";
 import { PLACE_NAME_DICTIONARY } from "@/constants/dictionary/map";
 import { ALL_PLACES } from "@/constants/placeList";
 import { ROUTES } from "@/constants/routes";
-import { PlaceId } from "@/server/db/schema";
 import {
   PlaceFeature,
   PlaceFeatureCollection,
+  PlaceId,
   RouteFeature,
   RouteFeatureCollection,
 } from "@/types";
@@ -35,10 +35,11 @@ export const generatePlaceGeoJson = (lang: "en" = "en") => {
   return geoJson;
 };
 
-export const generateRouteGeoJson = (lang: "en" = "en") => {
+export const generateRouteGeoJson = () => {
   const features: RouteFeature[] = ROUTES.map((route) => {
     const from = ALL_PLACES[route.places[0]];
     const to = ALL_PLACES[route.places[1]];
+    if (!from || !to) throw new Error("Invalid route config");
 
     return {
       type: "Feature",
