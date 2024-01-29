@@ -15,6 +15,7 @@ import { realtimeDb } from "@/lib/firebase/init";
 import { off, onValue, ref } from "firebase/database";
 import { GameState } from "@/types/firebase";
 import { PLACE_NAME_DICTIONARY } from "@/constants/dictionary/map";
+import GameButtons from "./game-buttons";
 
 type Props = {
   uid: string;
@@ -101,6 +102,8 @@ export default function GameBody({ uid, game, gameId }: Props) {
           </Avatar>
         </div>
       </Card>
+
+      <GameButtons />
     </main>
   );
 }
