@@ -48,7 +48,7 @@ export default function GameBody({ uid, game, gameId }: Props) {
 
   return (
     <main className="w-screen h-screen relative">
-      <Map />
+      <Map gameState={gameState} players={game.players} />
       <Card className="absolute top-3 left-3">
         <CardHeader>
           <CardTitle>{getGameTimeText(1, 1, game.totalYears)}</CardTitle>
@@ -62,10 +62,10 @@ export default function GameBody({ uid, game, gameId }: Props) {
       </Card>
 
       <Card
-        className="absolute top-3 right-3"
+        className="absolute top-3 right-3 hidden lg:block"
         // <!-- TODO: Add other players-->
       >
-        <div className="hidden lg:block card p-4 bg-initial space-y-2">
+        <div className="p-4 bg-initial space-y-2">
           <div className="flex space-x-3 items-center">
             <Avatar className="h-12 w-12">
               <AvatarImage
@@ -91,17 +91,17 @@ export default function GameBody({ uid, game, gameId }: Props) {
             </small>
           </div>
         </div>
-        <div className="lg:hidden">
-          <Avatar className="h-12 w-12">
-            <AvatarImage
-              src={player?.user.imageUrl || "/avatars/01.png"}
-              alt={player?.user.username || "user"}
-              className="object-cover"
-            />
-            <AvatarFallback>⚠️</AvatarFallback>
-          </Avatar>
-        </div>
       </Card>
+      <div className="lg:hidden absolute top-3 right-3">
+        <Avatar className="h-12 w-12 rounded-full">
+          <AvatarImage
+            src={player?.user.imageUrl || "/avatars/01.png"}
+            alt={player?.user.username || "user"}
+            className="object-cover"
+          />
+          <AvatarFallback>⚠️</AvatarFallback>
+        </Avatar>
+      </div>
 
       <GameButtons />
     </main>

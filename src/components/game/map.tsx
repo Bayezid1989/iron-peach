@@ -12,6 +12,10 @@ import MapGl, {
 import { generatePlaceGeoJson, generateRouteGeoJson } from "@/lib/geoJson";
 import { PlaceFeature, PlaceId } from "@/types";
 import AssetSheet from "./asset-sheet";
+import { GameState } from "@/types/firebase";
+import { ALL_PLACES } from "@/constants/placeList";
+import Marker from "./marker";
+import { getGame } from "@/server/queries/game";
 
 const defaultPosition = {
   longitude: 23.727539,
@@ -31,7 +35,20 @@ const getAssetProperties = (e: MapLayerMouseEvent) => {
   return null;
 };
 
-export default function Map() {
+export default function Map({
+  gameState,
+  players,
+}: {
+  gameState: GameState;
+  players: {
+    order: number | null;
+    user: {
+      id: string;
+      username: string;
+      imageUrl: string | null;
+    };
+  }[];
+}) {
   const [viewState, setViewState] = useState(defaultPosition);
   const [places] = useState(generatePlaceGeoJson());
   const [routes] = useState(generateRouteGeoJson());
@@ -104,6 +121,14 @@ export default function Map() {
         />
       </Source>
       <AssetSheet placeId={assetPlaceId} setPlaceId={setAssetPlaceId} />
+      {players.map((player) => (
+        <Marker
+          key={player.user.id}
+          playerId={player.user.id}
+          player={gameState.players[player.user.id]}
+          playerImageUrl={player.user.imageUrl}
+        />
+      ))}
     </MapGl>
   );
 }
