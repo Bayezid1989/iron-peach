@@ -10,9 +10,7 @@ import { useRouter } from "next/navigation";
 import Dice from "./dice";
 import { useState } from "react";
 import { rollDice } from "@/utils";
-import { ref, update } from "firebase/database";
-import { realtimeDb } from "@/lib/firebase/init";
-import { PlayerState } from "@/types/firebase";
+import { updatePlayerState } from "@/lib/firebase/realtimeDb";
 
 export default function GameButtons({
   gameId,
@@ -31,15 +29,11 @@ export default function GameButtons({
       onClick: () => {
         const { initial, result } = rollDice();
         setDice({ initial, result });
-        const playerRef = ref(
-          realtimeDb,
-          `/games/${gameId}/players/${playerId}`,
-        );
-        const updatingData: Partial<PlayerState> = {
+
+        updatePlayerState(gameId, playerId, {
           action: "roll",
           diceResult: result,
-        };
-        update(playerRef, updatingData);
+        });
       },
     },
     {
