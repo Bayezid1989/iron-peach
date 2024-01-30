@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/shadcn-utils";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { LOBBY_ITEMS } from "@/constants/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

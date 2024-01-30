@@ -8,7 +8,7 @@ import { auth, authProviders } from "@/lib/firebase/init";
 import { loginWithPopup, loginWithRedirect } from "@/lib/firebase/auth";
 import { useEffect } from "react";
 import useWindowSize from "@/hooks/useWindowSize";
-import { useToast } from "../ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { getRedirectResult } from "firebase/auth";
 import { setSessionCookie } from "@/server/actions/auth";
 import useErrorToast from "@/hooks/useErrorToast";

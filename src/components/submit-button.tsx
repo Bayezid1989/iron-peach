@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2 } from "lucide-react";
-import { Button, ButtonProps } from "./ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import { useFormStatus } from "react-dom";
 import { cn } from "@/lib/shadcn-utils";
 

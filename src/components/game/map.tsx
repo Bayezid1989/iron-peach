@@ -13,9 +13,7 @@ import { generatePlaceGeoJson, generateRouteGeoJson } from "@/lib/geoJson";
 import { PlaceFeature, PlaceId } from "@/types";
 import AssetSheet from "./asset-sheet";
 import { GameState } from "@/types/firebase";
-import { ALL_PLACES } from "@/constants/placeList";
 import Marker from "./marker";
-import { getGame } from "@/server/queries/game";
 
 const defaultPosition = {
   longitude: 23.727539,
