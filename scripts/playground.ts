@@ -22,7 +22,6 @@ const ref = realtimeDb.ref("rooms");
   //     createdAt: Date.now(),
   //   },
   // });
-
   // const visitorRef = ref.child("testId/visitors");
   // await visitorRef.push().set(
   //   {
@@ -38,8 +37,7 @@ const ref = realtimeDb.ref("rooms");
   //     }
   //   },
   // );
-
-  const roomRef = ref.child("testId");
+  // const roomRef = ref.child("testId");
   // await roomRef.update(
   //   {
   //     order: ["visitor1", "visitor2", "visitor3"],
@@ -48,7 +46,7 @@ const ref = realtimeDb.ref("rooms");
   //     console.log("Data updated successfully.");
   //   },
   // );
-  roomRef.remove(() => {
-    console.log("Data removed successfully.");
-  });
+  // roomRef.remove(() => {
+  //   console.log("Data removed successfully.");
+  // });
 })();

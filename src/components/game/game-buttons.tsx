@@ -15,6 +15,7 @@ export default function GameButtons() {
   const { push } = useRouter();
   const [dice, setDice] = useState({ initial: 0, final: 0 });
   console.log(dice);
+
   const buttons = [
     {
       Icon: Dice3,

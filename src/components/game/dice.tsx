@@ -2,6 +2,8 @@ import "@/styles/dice.css";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { rollRandomDice } from "@/utils";
 
+// Based on https://lenadesign.org/2020/06/18/roll-the-dice/
+
 type Dice = { initial: number; final: number };
 
 export default function Dice({
@@ -11,7 +13,7 @@ export default function Dice({
   dice: Dice;
   setDice: Dispatch<SetStateAction<Dice>>;
 }) {
-  function getRandom(excludedNumber = 0) {
+  function getRandom(excludedNumber: number) {
     let randomNumber = 0;
     do {
       randomNumber = rollRandomDice();
@@ -25,7 +27,7 @@ export default function Dice({
   }, [setDice, dice.initial]);
 
   return (
-    <div className="absolute bottom-24 inset-x-1/2 flex justify-center">
+    <div className="absolute bottom-32 inset-x-1/2 flex justify-center">
       <div className={`dice show-${dice.final || dice.initial}`}>
         <div className="side one">
           <div className="dot one-1"></div>
