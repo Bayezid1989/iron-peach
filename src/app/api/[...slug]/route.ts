@@ -66,14 +66,14 @@ const route = app
     async (c) => {
       const { moveNumber, currentPlace } = c.req.valid("query");
 
-      // const data = await readNeo4j(
-      //   `MATCH (start:Place {placeId: $currentPlace})-[:ADJACENT_TO*$moveNumber]-(end:Place)
-      //   RETURN end`,
-      //   { moveNumber, currentPlace },
-      // );
-      // console.log("neo4j places", data);
+      const data = await readNeo4j(
+        `MATCH (start:Place {placeId: $currentPlace})-[:ADJACENT_TO*${moveNumber}]-(end:Place)
+        RETURN end`,
+        { currentPlace },
+      );
+      const places = data.map((d) => d.end.properties.placeId as PlaceId);
 
-      return c.json({ result: "list books" });
+      return c.json({ places });
     },
   );
 

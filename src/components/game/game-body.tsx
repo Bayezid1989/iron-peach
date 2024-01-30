@@ -82,7 +82,7 @@ export default function GameBody({ game, gameId }: Props) {
   );
 
   console.log("shortestPathData", shortestPathData?.count);
-  console.log("nthPlacesData", nthPlacesData?.result);
+  console.log("nthPlacesData", nthPlacesData?.places);
   console.log("Game state data", gameState);
 
   // TODO: Add goal set roulette
