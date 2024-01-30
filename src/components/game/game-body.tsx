@@ -16,6 +16,9 @@ import { off, onValue, ref } from "firebase/database";
 import { GameState } from "@/types/firebase";
 import { PLACE_NAME_DICTIONARY } from "@/constants/dictionary/map";
 import GameButtons from "./game-buttons";
+import { honoClient } from "@/lib/hono";
+import { InferRequestType } from "hono";
+import useSWR from "swr";
 
 type Props = {
   uid: string;
@@ -23,8 +26,20 @@ type Props = {
   gameId: string;
 };
 
-export default function GameBody({ uid, game, gameId }: Props) {
-  const { data: gameState, error } = useSWRSubscription(
+const shortestPathFetcher =
+  (arg: InferRequestType<typeof honoClient.api.shortestPath.$get>) =>
+  async () => {
+    const res = await honoClient.api.shortestPath.$get(arg);
+    return await res.json();
+  };
+const nthPlacesFetcher =
+  (arg: InferRequestType<typeof honoClient.api.nthPlaces.$get>) => async () => {
+    const res = await honoClient.api.nthPlaces.$get(arg);
+    return await res.json();
+  };
+
+export default function GameBody({ game, gameId }: Props) {
+  const { data: gameState } = useSWRSubscription(
     ["game", gameId],
     ([_, id], { next }: SWRSubscriptionOptions<GameState, Error>) => {
       const gameRef = ref(realtimeDb, `games/${id}`);
@@ -37,26 +52,56 @@ export default function GameBody({ uid, game, gameId }: Props) {
       return () => off(gameRef);
     },
   );
-  console.log("Listen data", gameState);
-  console.log("Listen error", error);
+  const turnPlayerId = gameState?.order[gameState?.turn];
+
+  const { data: shortestPathData } = useSWR(
+    turnPlayerId && [
+      "shortestPath",
+      gameState?.goal,
+      gameState?.players[turnPlayerId].place,
+    ],
+    shortestPathFetcher({
+      query: {
+        goal: gameState?.goal!,
+        currentPlace: gameState?.players[turnPlayerId || ""]?.place!,
+      },
+    }),
+  );
+
+  const turnPlayer = gameState?.players[turnPlayerId!];
+  const { data: nthPlacesData } = useSWR(
+    turnPlayer?.action === "roll" && turnPlayer.diceResult
+      ? ["nthPlaces"]
+      : undefined,
+    nthPlacesFetcher({
+      query: {
+        currentPlace: gameState?.players[turnPlayerId || ""]?.place!,
+        moveNumber: turnPlayer?.diceResult?.toString() || "",
+      },
+    }),
+  );
+
+  console.log("shortestPathData", shortestPathData?.count);
+  console.log("nthPlacesData", nthPlacesData?.result);
+  console.log("Game state data", gameState);
 
   // TODO: Add goal set roulette
   // TODO: add game buttons
 
-  if (!game || !gameState) return null;
-  const player = game.players.find((player) => player.user.id === uid);
+  if (!game || !turnPlayerId) return null;
+  const player = game.players.find((player) => player.user.id === turnPlayerId);
 
   return (
     <main className="w-screen h-screen relative">
       <Map gameState={gameState} players={game.players} />
       <Card className="absolute top-3 left-3">
         <CardHeader>
-          <CardTitle>{getGameTimeText(1, 1, game.totalYears)}</CardTitle>
+          <CardTitle>
+            {getGameTimeText(gameState.year, gameState.round, game.totalYears)}
+          </CardTitle>
           <CardDescription>
             Current Goal:
-            <strong>
-              {PLACE_NAME_DICTIONARY[gameState.goal!]?.en || "Johannesburg"}
-            </strong>
+            <strong>{PLACE_NAME_DICTIONARY[gameState.goal!]?.en}</strong>
           </CardDescription>
         </CardHeader>
       </Card>
@@ -67,7 +112,7 @@ export default function GameBody({ uid, game, gameId }: Props) {
       >
         <div className="p-4 bg-initial space-y-2">
           <div className="flex space-x-3 items-center">
-            <Avatar className="h-12 w-12">
+            <Avatar className="h-10 w-10">
               <AvatarImage
                 src={player?.user.imageUrl || "/avatars/01.png"}
                 alt={player?.user.username || "user"}
@@ -76,20 +121,14 @@ export default function GameBody({ uid, game, gameId }: Props) {
               <AvatarFallback>⚠️</AvatarFallback>
             </Avatar>
 
-            <div>
-              <h4 className="text-xl font-bold">{player?.user.username}</h4>
-            </div>
+            <CardTitle>{player?.user.username} </CardTitle>
           </div>
-          <div className="flex space-x-4">
-            <small>
-              <strong>
-                {convertPrice(gameState.players[player?.user.id!].balance)}
-              </strong>
-            </small>
-            <small>
-              <strong>24</strong> steps to the goal
-            </small>
-          </div>
+          <CardDescription className="space-x-6">
+            <strong>
+              {convertPrice(gameState.players[player?.user.id!].balance)}
+            </strong>
+            <strong>{shortestPathData?.count}</strong> steps to the goal
+          </CardDescription>
         </div>
       </Card>
       <div className="lg:hidden absolute top-3 right-3">
@@ -103,7 +142,7 @@ export default function GameBody({ uid, game, gameId }: Props) {
         </Avatar>
       </div>
 
-      <GameButtons />
+      <GameButtons gameId={gameId} playerId={turnPlayerId} />
     </main>
   );
 }

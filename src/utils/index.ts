@@ -76,4 +76,13 @@ export const convetToPercent = (number: number) =>
 export const pickRandom = <T>(array: T[]): T =>
   array[Math.floor(Math.random() * array.length)];
 
-export const rollRandomDice = () => Math.floor(Math.random() * 6 + 1);
+export const getDiceResult = () => Math.floor(Math.random() * 6 + 1);
+
+export const rollDice = () => {
+  const initial = getDiceResult();
+  let result = 0;
+  do {
+    result = Math.floor(Math.random() * 6 + 1);
+  } while (result === initial);
+  return { result, initial };
+};

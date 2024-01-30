@@ -9,18 +9,38 @@ import {
 import { useRouter } from "next/navigation";
 import Dice from "./dice";
 import { useState } from "react";
-import { rollRandomDice } from "@/utils";
+import { rollDice } from "@/utils";
+import { ref, update } from "firebase/database";
+import { realtimeDb } from "@/lib/firebase/init";
+import { PlayerState } from "@/types/firebase";
 
-export default function GameButtons() {
+export default function GameButtons({
+  gameId,
+  playerId,
+}: {
+  gameId: string;
+  playerId: string;
+}) {
   const { push } = useRouter();
-  const [dice, setDice] = useState({ initial: 0, final: 0 });
-  console.log(dice);
+  const [dice, setDice] = useState({ initial: 0, result: 0 });
 
   const buttons = [
     {
       Icon: Dice3,
       label: "Dice",
-      onClick: () => setDice({ initial: rollRandomDice(), final: 0 }),
+      onClick: () => {
+        const { initial, result } = rollDice();
+        setDice({ initial, result });
+        const playerRef = ref(
+          realtimeDb,
+          `/games/${gameId}/players/${playerId}`,
+        );
+        const updatingData: Partial<PlayerState> = {
+          action: "roll",
+          diceResult: result,
+        };
+        update(playerRef, updatingData);
+      },
     },
     {
       Icon: Sparkles,
@@ -65,7 +85,7 @@ export default function GameButtons() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      {dice.initial > 0 && <Dice dice={dice} setDice={setDice} />}
+      {dice.initial > 0 && <Dice dice={dice} />}
     </>
   );
 }
