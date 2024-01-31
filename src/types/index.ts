@@ -38,12 +38,16 @@ export type APIResponse<T> =
   | { success: true; data: T }
   | { success: false; error: string };
 
-export type PlaceFeature = {
+export type BaseFeature = {
   type: "Feature";
   geometry: {
     type: "Point";
     coordinates: [number, number];
   };
+  properties: {};
+};
+
+export type PlaceFeature = BaseFeature & {
   properties: {
     name: string;
     placeId: string;
@@ -60,6 +64,11 @@ export type RouteFeature = {
   properties: {
     kind: RouteKind;
   };
+};
+
+export type BaseFeatureCollection = {
+  type: "FeatureCollection";
+  features: BaseFeature[];
 };
 
 export type PlaceFeatureCollection = {

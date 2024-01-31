@@ -19,6 +19,7 @@ import GameButtons from "./game-buttons";
 import { honoClient } from "@/lib/hono";
 import { InferRequestType } from "hono";
 import useSWR from "swr";
+import PlayerCard from "./player-card";
 
 type Props = {
   uid: string;
@@ -26,12 +27,6 @@ type Props = {
   gameId: string;
 };
 
-const shortestPathFetcher =
-  (arg: InferRequestType<typeof honoClient.api.shortestPath.$get>) =>
-  async () => {
-    const res = await honoClient.api.shortestPath.$get(arg);
-    return await res.json();
-  };
 const nthPlacesFetcher =
   (arg: InferRequestType<typeof honoClient.api.nthPlaces.$get>) => async () => {
     const res = await honoClient.api.nthPlaces.$get(arg);
@@ -54,20 +49,6 @@ export default function GameBody({ game, gameId }: Props) {
   );
   const turnPlayerId = gameState?.order[gameState?.turn];
 
-  const { data: shortestPathData } = useSWR(
-    turnPlayerId && [
-      "shortestPath",
-      gameState?.goal,
-      gameState?.players[turnPlayerId].place,
-    ],
-    shortestPathFetcher({
-      query: {
-        goal: gameState?.goal!,
-        currentPlace: gameState?.players[turnPlayerId || ""]?.place!,
-      },
-    }),
-  );
-
   const turnPlayer = gameState?.players[turnPlayerId!];
   const { data: nthPlacesData } = useSWR(
     turnPlayer?.action === "roll" && turnPlayer.diceResult
@@ -81,7 +62,6 @@ export default function GameBody({ game, gameId }: Props) {
     }),
   );
 
-  console.log("shortestPathData", shortestPathData?.count);
   console.log("nthPlacesData", nthPlacesData?.places);
   console.log("Game state data", gameState);
 
@@ -93,7 +73,11 @@ export default function GameBody({ game, gameId }: Props) {
 
   return (
     <main className="w-screen h-screen relative">
-      <Map gameState={gameState} players={game.players} />
+      <Map
+        gameState={gameState}
+        players={game.players}
+        nthPlaces={nthPlacesData?.places}
+      />
       <Card className="absolute top-3 left-3">
         <CardHeader>
           <CardTitle>
@@ -106,41 +90,7 @@ export default function GameBody({ game, gameId }: Props) {
         </CardHeader>
       </Card>
 
-      <Card
-        className="absolute top-3 right-3 hidden lg:block"
-        // <!-- TODO: Add other players-->
-      >
-        <div className="p-4 bg-initial space-y-2">
-          <div className="flex space-x-3 items-center">
-            <Avatar className="h-10 w-10">
-              <AvatarImage
-                src={player?.user.imageUrl || "/avatars/01.png"}
-                alt={player?.user.username || "user"}
-                className="object-cover"
-              />
-              <AvatarFallback>⚠️</AvatarFallback>
-            </Avatar>
-
-            <CardTitle>{player?.user.username} </CardTitle>
-          </div>
-          <CardDescription className="space-x-6">
-            <strong>
-              {convertPrice(gameState.players[player?.user.id!].balance)}
-            </strong>
-            <strong>{shortestPathData?.count}</strong> steps to the goal
-          </CardDescription>
-        </div>
-      </Card>
-      <div className="lg:hidden absolute top-3 right-3">
-        <Avatar className="h-12 w-12 rounded-full">
-          <AvatarImage
-            src={player?.user.imageUrl || "/avatars/01.png"}
-            alt={player?.user.username || "user"}
-            className="object-cover"
-          />
-          <AvatarFallback>⚠️</AvatarFallback>
-        </Avatar>
-      </div>
+      <PlayerCard gameState={gameState} player={player} />
 
       <GameButtons gameId={gameId} playerId={turnPlayerId} />
     </main>

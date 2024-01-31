@@ -3,12 +3,35 @@ import { PLACE_NAME_DICTIONARY } from "@/constants/dictionary/map";
 import { ALL_PLACES } from "@/constants/placeList";
 import { ROUTES } from "@/constants/routes";
 import {
+  BaseFeature,
+  BaseFeatureCollection,
   PlaceFeature,
   PlaceFeatureCollection,
   PlaceId,
   RouteFeature,
   RouteFeatureCollection,
 } from "@/types";
+
+export const generatePulsingPlaceGeoJson = (placeIds: PlaceId[]) => {
+  const features: BaseFeature[] = placeIds.map((placeId) => {
+    const place = ALL_PLACES[placeId];
+
+    if (!place) throw new Error("Invalid place config");
+    return {
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [place.coordinates.lng, place.coordinates.lat],
+      },
+      properties: {},
+    };
+  });
+  const geoJson: BaseFeatureCollection = {
+    type: "FeatureCollection",
+    features: features,
+  };
+  return geoJson;
+};
 
 export const generatePlaceGeoJson = (lang: "en" = "en") => {
   const features: PlaceFeature[] = Object.entries(ALL_PLACES).map((entry) => {

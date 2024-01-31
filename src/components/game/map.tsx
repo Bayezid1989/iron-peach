@@ -9,11 +9,16 @@ import MapGl, {
   NavigationControl,
   Source,
 } from "react-map-gl";
-import { generatePlaceGeoJson, generateRouteGeoJson } from "@/lib/geoJson";
+import {
+  generatePlaceGeoJson,
+  generatePulsingPlaceGeoJson,
+  generateRouteGeoJson,
+} from "@/lib/geoJson";
 import { PlaceFeature, PlaceId } from "@/types";
 import AssetSheet from "./asset-sheet";
 import { GameState } from "@/types/firebase";
 import Marker from "./marker";
+import { createPulsingDot } from "@/lib/canvas";
 
 const defaultPosition = {
   longitude: 23.727539,
@@ -36,6 +41,7 @@ const getAssetProperties = (e: MapLayerMouseEvent) => {
 export default function Map({
   gameState,
   players,
+  nthPlaces,
 }: {
   gameState: GameState;
   players: {
@@ -46,6 +52,7 @@ export default function Map({
       imageUrl: string | null;
     };
   }[];
+  nthPlaces: PlaceId[] | undefined;
 }) {
   const [viewState, setViewState] = useState(defaultPosition);
   const [places] = useState(generatePlaceGeoJson());
@@ -62,6 +69,10 @@ export default function Map({
       style={{ width: "100%", height: "100%" }}
       terrain={{ source: "mapbox-dem", exaggeration: 1.5 }}
       interactiveLayerIds={["places"]}
+      onLoad={(e) => {
+        const map = e.target;
+        map.addImage("pulsing-dot", createPulsingDot(map), { pixelRatio: 2 });
+      }}
       onMouseEnter={(e) => {
         if (getAssetProperties(e)) {
           e.target.getCanvas().style.cursor = "pointer";
@@ -69,7 +80,8 @@ export default function Map({
       }}
       onMouseLeave={(e) => {
         if (getAssetProperties(e)) {
-          e.target.getCanvas().style.cursor = "";
+          const map = e.target;
+          map.getCanvas().style.cursor = "";
         }
       }}
       onClick={(e) => {
@@ -103,6 +115,24 @@ export default function Map({
           }}
         />
       </Source>
+      {nthPlaces && nthPlaces.length > 0 && (
+        <Source
+          id="pulsing-places"
+          type="geojson"
+          data={generatePulsingPlaceGeoJson(nthPlaces)}
+        >
+          <Layer
+            id="pulsing-places"
+            type="symbol"
+            source="pulsing-places"
+            beforeId="places"
+            layout={{
+              "icon-image": "pulsing-dot",
+              "icon-allow-overlap": true,
+            }}
+          />
+        </Source>
+      )}
       <Source id="places" type="geojson" data={places}>
         <Layer
           id="places"
@@ -115,9 +145,11 @@ export default function Map({
             // 'text-font': ['Open Sans Semibold'],
             "text-offset": [0, 0.8],
             "text-anchor": "top",
+            "icon-allow-overlap": true,
           }}
         />
       </Source>
+
       <AssetSheet placeId={assetPlaceId} setPlaceId={setAssetPlaceId} />
       {players.map((player) => (
         <Marker

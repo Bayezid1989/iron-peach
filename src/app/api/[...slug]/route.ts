@@ -6,7 +6,7 @@ import { readNeo4j } from "@/server/neo4j";
 import { PLACE_IDS } from "@/constants/db";
 import { PlaceId } from "@/types";
 
-// export const runtime = "edge";
+export const runtime = "edge";
 
 const app = new Hono().basePath("/api");
 
