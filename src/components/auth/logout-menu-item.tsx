@@ -1,7 +1,7 @@
 "use client";
 
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import useErrorToast from "@/hooks/useErrorToast";
+import useErrorToast from "@/hooks/use-error-toast";
 import { auth } from "@/lib/firebase/init";
 import { removeSessionCookie } from "@/server/actions/auth";
 import { useRouter } from "next/navigation";

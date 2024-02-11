@@ -7,11 +7,10 @@ import { DEVICE_WIDTH } from "@/constants";
 import { auth, authProviders } from "@/lib/firebase/init";
 import { loginWithPopup, loginWithRedirect } from "@/lib/firebase/auth";
 import { useEffect } from "react";
-import useWindowSize from "@/hooks/useWindowSize";
-import { useToast } from "@/components/ui/use-toast";
+import useWindowSize from "@/hooks/use-window-size";
 import { getRedirectResult } from "firebase/auth";
 import { setSessionCookie } from "@/server/actions/auth";
-import useErrorToast from "@/hooks/useErrorToast";
+import useErrorToast from "@/hooks/use-error-toast";
 
 export function ProviderLogins() {
   const { replace, push } = useRouter();

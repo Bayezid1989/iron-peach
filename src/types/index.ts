@@ -14,7 +14,7 @@ export type Asset = {
   profitRate: number;
 };
 
-type Coordinates = { lat: number; lng: number };
+export type Coordinates = { lat: number; lng: number };
 
 export type AssetPlace = {
   coordinates: Coordinates;
@@ -23,13 +23,13 @@ export type AssetPlace = {
 };
 
 export type IncomeExpensePlace = {
-  coordinates: { lat: number; lng: number };
+  coordinates: Coordinates;
   role: "income" | "expense";
   cashVolume: CashVolume;
 };
 
 export type ItemPlace = {
-  coordinates: { lat: number; lng: number };
+  coordinates: Coordinates;
   role: "item";
   items: string[];
 };

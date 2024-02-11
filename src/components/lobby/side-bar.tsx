@@ -22,7 +22,7 @@ export function Sidebar({ className }: { className?: string }) {
                 key={child.title}
                 variant={pathname === child.href ? "secondary" : "ghost"}
                 asChild
-                className="w-full justify-start"
+                className="w-full justify-start hover:bg-secondary/50"
               >
                 <Link className="text-left" href={child.href}>
                   {child.title}

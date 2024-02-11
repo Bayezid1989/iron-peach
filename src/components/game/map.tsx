@@ -17,8 +17,11 @@ import {
 import { PlaceFeature, PlaceId } from "@/types";
 import AssetSheet from "./asset-sheet";
 import { GameState } from "@/types/firebase";
+import { Marker as MarkerGl } from "react-map-gl";
 import Marker from "./marker";
 import { createPulsingDot } from "@/lib/canvas";
+import { moveMarker } from "@/lib/turf";
+import { ALL_PLACES } from "@/constants/placeList";
 
 const defaultPosition = {
   longitude: 23.727539,
@@ -58,6 +61,9 @@ export default function Map({
   const [places] = useState(generatePlaceGeoJson());
   const [routes] = useState(generateRouteGeoJson());
   const [assetPlaceId, setAssetPlaceId] = useState<PlaceId | null>(null);
+  const [coordinates, setCoordinates] = useState(
+    ALL_PLACES.berlin?.coordinates,
+  ); // for testing
 
   return (
     <MapGl
@@ -115,6 +121,7 @@ export default function Map({
           }}
         />
       </Source>
+
       {nthPlaces && nthPlaces.length > 0 && (
         <Source
           id="pulsing-places"
@@ -159,6 +166,17 @@ export default function Map({
           playerImageUrl={player.user.imageUrl}
         />
       ))}
+      <MarkerGl
+        longitude={coordinates?.lng!}
+        latitude={coordinates?.lat!}
+        anchor="bottom"
+        style={{ width: "46px", height: "46px" }}
+        onClick={() => {
+          moveMarker("berlin", "madrid", setCoordinates, 30);
+        }}
+      >
+        <img src="/markers/white" />
+      </MarkerGl>
     </MapGl>
   );
 }
