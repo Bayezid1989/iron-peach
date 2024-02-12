@@ -13,11 +13,11 @@ import {
 import { moveMarker } from "@/lib/turf";
 import { updatePlayerState } from "@/lib/firebase/realtimeDb";
 import { Button } from "@/components/ui/button";
+import usePossiblePaths from "@/hooks/use-possible-paths";
 
 export default function MoveConfirmDialog({
   placeId,
   setPlaceId,
-  possiblePaths,
   gameId,
   turnPlayerId,
 }: {
@@ -25,11 +25,12 @@ export default function MoveConfirmDialog({
   setPlaceId: Dispatch<SetStateAction<PlaceId | null>>;
   gameId: string;
   turnPlayerId: string;
-  possiblePaths: PlaceId[][] | undefined;
 }) {
+  const possiblePaths = usePossiblePaths();
+
   const onClick = () => {
     setPlaceId(null);
-    const path = possiblePaths?.find((p) => p[p.length - 1] === placeId);
+    const path = possiblePaths.find((p) => p[p.length - 1] === placeId);
     moveMarker(path!, (coordinates) =>
       updatePlayerState(gameId, turnPlayerId, { coordinates }),
     );

@@ -4,17 +4,8 @@ import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import { convertPrice } from "@/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { GameState } from "@/types/firebase";
-import { honoClient } from "@/lib/hono";
-import { InferRequestType } from "hono";
-import useSWR from "swr";
 import { getGame } from "@/server/queries/game";
-
-const shortestPathFetcher =
-  (arg: InferRequestType<typeof honoClient.api.shortestPath.$get>) =>
-  async () => {
-    const res = await honoClient.api.shortestPath.$get(arg);
-    return await res.json();
-  };
+import useShortestPath from "@/hooks/use-shortest-path";
 
 export default function PlayerCard({
   gameState,
@@ -23,21 +14,8 @@ export default function PlayerCard({
   gameState: GameState;
   player: NonNullable<Awaited<ReturnType<typeof getGame>>>["players"][number];
 }) {
-  const turnPlayerId = gameState?.order[gameState?.turn];
+  const data = useShortestPath();
 
-  const { data: shortestPathData } = useSWR(
-    turnPlayerId && [
-      "shortestPath",
-      gameState?.goal,
-      gameState?.players[turnPlayerId].place,
-    ],
-    shortestPathFetcher({
-      query: {
-        goal: gameState?.goal!,
-        currentPlace: gameState?.players[turnPlayerId || ""]?.place!,
-      },
-    }),
-  );
   return (
     <>
       <Card
@@ -61,7 +39,7 @@ export default function PlayerCard({
             <strong>
               {convertPrice(gameState.players[player?.user.id!].balance)}
             </strong>
-            <strong>{shortestPathData?.count}</strong> steps to the goal
+            <strong>{data?.count}</strong> steps to the goal
           </CardDescription>
         </div>
       </Card>

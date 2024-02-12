@@ -48,6 +48,7 @@ const route = app
 
       const stops: PlaceId[] = data[0].stops;
       return c.json({
+        stops,
         count: stops.length - 2, // Subtract 2 because we don't want to count the start and end
       });
     },

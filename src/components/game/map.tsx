@@ -11,12 +11,13 @@ import {
 } from "@/lib/geoJson";
 import { PlaceId } from "@/types";
 import AssetSheet from "./asset-sheet";
-import { GameState } from "@/types/firebase";
 import Marker from "./marker";
 import { createPulsingDot } from "@/lib/canvas";
 import { getGame } from "@/server/queries/game";
 import { geVisitablePlaceProperties, getAssetProperties } from "@/lib/mapgl";
 import MoveConfirmDialog from "./move-confirm-dialog";
+import useGameState from "@/hooks/use-game-state";
+import usePossiblePaths from "@/hooks/use-possible-paths";
 
 const defaultPosition = {
   longitude: 23.727539,
@@ -28,22 +29,20 @@ const defaultPosition = {
 export default function Map({
   gameId,
   turnPlayerId,
-  gameState,
   players,
-  possiblePaths,
 }: {
   gameId: string;
   turnPlayerId: string;
-  gameState: GameState;
   players: NonNullable<Awaited<ReturnType<typeof getGame>>>["players"];
-  possiblePaths: PlaceId[][] | undefined;
 }) {
   const [viewState, setViewState] = useState(defaultPosition);
   const [places] = useState(generatePlaceGeoJson());
   const [routes] = useState(generateRouteGeoJson());
   const [assetPlaceId, setAssetPlaceId] = useState<PlaceId | null>(null);
   const [moveToPlaceId, setMoveToPlaceId] = useState<PlaceId | null>(null);
-  const visitablePlaces = possiblePaths?.map((p) => p[p.length - 1]) || [];
+  const { gameState } = useGameState();
+  const possiblePaths = usePossiblePaths();
+  const visitablePlaces = possiblePaths.map((p) => p[p.length - 1]);
 
   return (
     <MapGl
@@ -113,7 +112,7 @@ export default function Map({
         />
       </Source>
 
-      {possiblePaths && possiblePaths.length > 0 && (
+      {possiblePaths.length > 0 && (
         <Source
           id="pulsing-places"
           type="geojson"
@@ -154,11 +153,10 @@ export default function Map({
         setPlaceId={setMoveToPlaceId}
         gameId={gameId}
         turnPlayerId={turnPlayerId}
-        possiblePaths={possiblePaths}
       />
       {players.map(
         (player) =>
-          gameState.players[player.user.id].coordinates && (
+          gameState?.players[player.user.id].coordinates && (
             <Marker
               key={player.user.id}
               playerId={player.user.id}
