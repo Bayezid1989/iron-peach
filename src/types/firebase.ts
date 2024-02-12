@@ -1,14 +1,14 @@
-import type { PlaceId, ActionType } from ".";
+import type { PlaceId, ActionType, Coordinates } from ".";
 
 export type FirebaseCollection = "games" | "rooms";
 
 export type PlayerState = {
   place?: PlaceId;
+  coordinates?: Coordinates;
   balance: number;
-  action?: ActionType;
-  diceResult?: number;
-  movedTo?: PlaceId;
-  itemId?: string;
+  action?: ActionType | null;
+  diceResult?: number | null;
+  itemId?: string | null;
   cashAmount?: number;
   assets: {
     [assetId: string]: number;
@@ -24,17 +24,6 @@ export interface GameState {
   isBotTurn?: boolean;
   state: "beforeGame" | "playing" | "afterGame";
   players: {
-    [playerId: string]: {
-      place?: PlaceId;
-      balance: number;
-      action?: ActionType;
-      diceResult?: number;
-      movedTo?: PlaceId;
-      itemId?: string;
-      cashAmount?: number;
-      assets: {
-        [assetId: string]: number;
-      };
-    };
+    [playerId: string]: PlayerState;
   };
 }

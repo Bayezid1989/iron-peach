@@ -1,24 +1,20 @@
 "use client";
 
-import { ALL_PLACES } from "@/constants/placeList";
 import { createMarkerImage } from "@/lib/canvas";
-import { GameState } from "@/types/firebase";
+import { Coordinates } from "@/types";
 import { useEffect, useState } from "react";
 import { Marker as MarkerGl } from "react-map-gl";
 
 export default function Marker({
   playerId,
-  player,
+  coordinates,
   playerImageUrl,
 }: {
   playerId: string;
-  player: GameState["players"][keyof GameState["players"]];
+  coordinates?: Coordinates;
   playerImageUrl: string | null;
 }) {
-  const [image, setImage] = useState<string>(
-    "/public/markers/player-white.png",
-  );
-  const coordinates = ALL_PLACES[player.place!]?.coordinates;
+  const [image, setImage] = useState<string>("/markers/player-white.png");
 
   useEffect(() => {
     if (playerImageUrl) {

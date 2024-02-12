@@ -2,6 +2,7 @@
 
 import { START_PLACES } from "@/constants";
 import { ID_LENGTH, PLACE_IDS } from "@/constants/db";
+import { ALL_PLACES } from "@/constants/placeList";
 import { db } from "@/server/db";
 import { gameTable, playerTable } from "@/server/db/schema";
 import { getCurrentUser } from "@/server/firebase-admin/auth";
@@ -49,6 +50,7 @@ export async function createNewGame(formData: FormData) {
     players: {
       [user.uid]: {
         place: actualStartPlace,
+        coordinates: ALL_PLACES[actualStartPlace]?.coordinates,
         balance: 1000,
         assets: {},
       },

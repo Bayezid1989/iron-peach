@@ -6,7 +6,7 @@ import * as turf from "@turf/turf";
 const getAlongCoordinates = (
   originId: PlaceId,
   destinationId: PlaceId,
-  kmPer1Step = 10,
+  kmPer1Step = 20,
 ) => {
   const origin = ALL_PLACES[originId]?.coordinates;
   const destination = ALL_PLACES[destinationId]?.coordinates;
@@ -31,6 +31,7 @@ const getAlongCoordinates = (
     const segment = turf.along(feature, i);
     arc.push(segment.geometry.coordinates);
   }
+  arc.push([destination?.lng!, destination?.lat!]);
   return arc;
 };
 
@@ -42,6 +43,7 @@ export const moveMarker = (
   for (let i = 0; i < path.length - 1; i++) {
     arc.push(...getAlongCoordinates(path[i], path[i + 1]));
   }
+
   let counter = 0;
 
   const animate = () => {

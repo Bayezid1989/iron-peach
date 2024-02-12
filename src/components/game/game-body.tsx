@@ -20,6 +20,7 @@ import { honoClient } from "@/lib/hono";
 import { InferRequestType } from "hono";
 import useSWR from "swr";
 import PlayerCard from "./player-card";
+import Dice from "./dice";
 
 type Props = {
   uid: string;
@@ -27,13 +28,14 @@ type Props = {
   gameId: string;
 };
 
-const nthPlacesFetcher =
-  (arg: InferRequestType<typeof honoClient.api.nthPlaces.$get>) => async () => {
-    const res = await honoClient.api.nthPlaces.$get(arg);
+const possiblePathsFetcher =
+  (arg: InferRequestType<typeof honoClient.api.possiblePaths.$get>) =>
+  async () => {
+    const res = await honoClient.api.possiblePaths.$get(arg);
     return await res.json();
   };
 
-export default function GameBody({ game, gameId }: Props) {
+export default function GameBody({ uid, game, gameId }: Props) {
   const { data: gameState } = useSWRSubscription(
     ["game", gameId],
     ([_, id], { next }: SWRSubscriptionOptions<GameState, Error>) => {
@@ -47,14 +49,15 @@ export default function GameBody({ game, gameId }: Props) {
       return () => off(gameRef);
     },
   );
-  const turnPlayerId = gameState?.order[gameState?.turn];
 
+  const turnPlayerId = gameState?.order[gameState?.turn];
   const turnPlayer = gameState?.players[turnPlayerId!];
-  const { data: nthPlacesData } = useSWR(
+
+  const { data: possiblePathsData } = useSWR(
     turnPlayer?.action === "roll" && turnPlayer.diceResult
-      ? ["nthPlaces"]
+      ? ["possiblePaths", turnPlayer.diceResult]
       : undefined,
-    nthPlacesFetcher({
+    possiblePathsFetcher({
       query: {
         currentPlace: gameState?.players[turnPlayerId || ""]?.place!,
         moveNumber: turnPlayer?.diceResult?.toString() || "",
@@ -62,7 +65,7 @@ export default function GameBody({ game, gameId }: Props) {
     }),
   );
 
-  console.log("nthPlacesData", nthPlacesData?.places);
+  console.log("possiblePathsData", possiblePathsData?.paths);
   console.log("Game state data", gameState);
 
   // TODO: Add goal set roulette
@@ -74,9 +77,11 @@ export default function GameBody({ game, gameId }: Props) {
   return (
     <main className="w-screen h-screen relative">
       <Map
+        gameId={gameId}
+        turnPlayerId={turnPlayerId}
         gameState={gameState}
         players={game.players}
-        nthPlaces={nthPlacesData?.places}
+        possiblePaths={possiblePathsData?.paths}
       />
       <Card className="absolute top-3 left-3">
         <CardHeader>
@@ -90,9 +95,12 @@ export default function GameBody({ game, gameId }: Props) {
         </CardHeader>
       </Card>
 
-      <PlayerCard gameState={gameState} player={player} />
+      {player && <PlayerCard gameState={gameState} player={player} />}
 
-      <GameButtons gameId={gameId} playerId={turnPlayerId} />
+      {uid === turnPlayerId && (
+        <GameButtons gameId={gameId} playerId={turnPlayerId} />
+      )}
+      {!!turnPlayer?.diceResult && <Dice diceResult={turnPlayer.diceResult} />}
     </main>
   );
 }

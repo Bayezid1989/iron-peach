@@ -7,6 +7,7 @@ import { GameState } from "@/types/firebase";
 import { honoClient } from "@/lib/hono";
 import { InferRequestType } from "hono";
 import useSWR from "swr";
+import { getGame } from "@/server/queries/game";
 
 const shortestPathFetcher =
   (arg: InferRequestType<typeof honoClient.api.shortestPath.$get>) =>
@@ -20,16 +21,7 @@ export default function PlayerCard({
   player,
 }: {
   gameState: GameState;
-  player:
-    | {
-        order: number | null;
-        user: {
-          imageUrl: string | null;
-          username: string;
-          id: string;
-        };
-      }
-    | undefined;
+  player: NonNullable<Awaited<ReturnType<typeof getGame>>>["players"][number];
 }) {
   const turnPlayerId = gameState?.order[gameState?.turn];
 

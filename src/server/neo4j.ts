@@ -6,7 +6,7 @@ export const driver = neo4j.driver(
   neo4j.auth.basic(process.env.NEO4J_USERNAME!, process.env.NEO4J_PASSWORD!),
 );
 
-export async function readNeo4j(
+export async function readNeo4j<T>(
   cypher: Query,
   params?: Parameters<ManagedTransaction["run"]>[1],
 ) {
@@ -20,7 +20,7 @@ export async function readNeo4j(
     // 3. Process the Results
     const values = res.records.map((record) => record.toObject());
 
-    return values;
+    return values as T[];
   } finally {
     // 4. Close the session
     await session.close();

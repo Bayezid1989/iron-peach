@@ -7,8 +7,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-import Dice from "./dice";
-import { useState } from "react";
 import { rollDice } from "@/utils";
 import { updatePlayerState } from "@/lib/firebase/realtimeDb";
 
@@ -20,15 +18,13 @@ export default function GameButtons({
   playerId: string;
 }) {
   const { push } = useRouter();
-  const [dice, setDice] = useState({ initial: 0, result: 0 });
 
   const buttons = [
     {
       Icon: Dice3,
       label: "Dice",
-      onClick: () => {
-        const { initial, result } = rollDice();
-        setDice({ initial, result });
+      onClick: async () => {
+        const result = rollDice();
 
         updatePlayerState(gameId, playerId, {
           action: "roll",
@@ -79,7 +75,6 @@ export default function GameButtons({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      {dice.initial > 0 && <Dice dice={dice} />}
     </>
   );
 }

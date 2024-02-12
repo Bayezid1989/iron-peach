@@ -5,6 +5,7 @@ import { z } from "zod";
 import { readNeo4j } from "@/server/neo4j";
 import { PLACE_IDS } from "@/constants/db";
 import { PlaceId } from "@/types";
+import { RoutePath } from "@/types/neo4j";
 
 export const runtime = "edge";
 
@@ -15,7 +16,7 @@ const shortestPathSchema = z.object({
   currentPlace: z.enum(PLACE_IDS),
 });
 
-const nthPlacesSchema = z.object({
+const possiblePathSchema = z.object({
   moveNumber: z.string(),
   currentPlace: z.enum(PLACE_IDS),
 });
@@ -38,7 +39,7 @@ const route = app
     async (c) => {
       const { goal, currentPlace } = c.req.valid("query");
 
-      const data = await readNeo4j(
+      const data = await readNeo4j<{ stops: PlaceId[] }>(
         `MATCH p = shortestPath((a:Place)-[:ADJACENT_TO*]-(b:Place))
       WHERE a.placeId = $currentPlace AND b.placeId = $goal
       RETURN [n in nodes(p) | n.placeId] AS stops`,
@@ -52,9 +53,9 @@ const route = app
     },
   )
   .get(
-    "/nthPlaces",
+    "/possiblePaths",
     validator("query", (value, c) => {
-      const parsed = nthPlacesSchema.safeParse(value);
+      const parsed = possiblePathSchema.safeParse(value);
       if (
         !parsed.success ||
         !Number.isInteger(Number(parsed.data.moveNumber))
@@ -66,14 +67,19 @@ const route = app
     async (c) => {
       const { moveNumber, currentPlace } = c.req.valid("query");
 
-      const data = await readNeo4j(
-        `MATCH (start:Place {placeId: $currentPlace})-[:ADJACENT_TO*${moveNumber}]-(end:Place)
-        RETURN end`,
+      const data = await readNeo4j<{ p: RoutePath }>(
+        `MATCH p = (start:Place {placeId: $currentPlace})-[:ADJACENT_TO*${moveNumber}]-(end:Place)
+        RETURN p`,
         { currentPlace },
       );
-      const places = data.map((d) => d.end.properties.placeId as PlaceId);
+      const paths = data.map((d) => {
+        const end = d.p.end.properties.placeId;
+        const path = d.p.segments.map((s) => s.start.properties.placeId);
 
-      return c.json({ places });
+        return path.concat(end);
+      });
+
+      return c.json({ paths });
     },
   );
 
@@ -81,5 +87,3 @@ export type AppType = typeof route;
 
 export const GET = handle(app);
 export const POST = handle(app);
-
-// export type AppType = typeof app;

@@ -50,7 +50,7 @@ export type BaseFeature = {
 export type PlaceFeature = BaseFeature & {
   properties: {
     name: string;
-    placeId: string;
+    placeId: PlaceId;
     icon: string;
   };
 };

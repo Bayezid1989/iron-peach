@@ -1,20 +1,23 @@
 import "@/styles/dice.css";
+import { getDifferentDiceResult } from "@/utils";
 import { useEffect, useState } from "react";
 
 // Based on https://lenadesign.org/2020/06/18/roll-the-dice/
 
-export type DiceNums = { initial: number; result: number };
-
-export default function Dice({ dice }: { dice: DiceNums }) {
+export default function Dice({ diceResult }: { diceResult: number }) {
   const [displayResult, setDisplayResult] = useState(0);
 
   useEffect(() => {
-    setDisplayResult(dice.result);
-  }, [setDisplayResult, dice.result]);
+    setDisplayResult(diceResult);
+  }, [setDisplayResult, diceResult]);
 
   return (
     <div className="absolute bottom-32 inset-x-1/2 flex justify-center">
-      <div className={`dice show-${displayResult || dice.initial}`}>
+      <div
+        className={`dice show-${
+          displayResult || getDifferentDiceResult(diceResult)
+        }`}
+      >
         <div className="side one">
           <div className="dot one-1"></div>
         </div>

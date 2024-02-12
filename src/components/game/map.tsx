@@ -1,27 +1,22 @@
 "use client";
 
 import "mapbox-gl/dist/mapbox-gl.css";
-import { ICON_MAP, MAP_STYLES } from "@/constants";
+import { MAP_STYLES } from "@/constants";
 import { useState } from "react";
-import MapGl, {
-  Layer,
-  MapLayerMouseEvent,
-  NavigationControl,
-  Source,
-} from "react-map-gl";
+import MapGl, { Layer, NavigationControl, Source } from "react-map-gl";
 import {
   generatePlaceGeoJson,
   generatePulsingPlaceGeoJson,
   generateRouteGeoJson,
 } from "@/lib/geoJson";
-import { PlaceFeature, PlaceId } from "@/types";
+import { PlaceId } from "@/types";
 import AssetSheet from "./asset-sheet";
 import { GameState } from "@/types/firebase";
-import { Marker as MarkerGl } from "react-map-gl";
 import Marker from "./marker";
 import { createPulsingDot } from "@/lib/canvas";
-import { moveMarker } from "@/lib/turf";
-import { ALL_PLACES } from "@/constants/placeList";
+import { getGame } from "@/server/queries/game";
+import { geVisitablePlaceProperties, getAssetProperties } from "@/lib/mapgl";
+import MoveConfirmDialog from "./move-confirm-dialog";
 
 const defaultPosition = {
   longitude: 23.727539,
@@ -30,38 +25,25 @@ const defaultPosition = {
   pitch: 20,
 };
 
-const getAssetProperties = (e: MapLayerMouseEvent) => {
-  if (e.features?.[0]?.layer.id === "places") {
-    const properties = e.features?.[0]
-      ?.properties as PlaceFeature["properties"];
-    if (properties.icon === ICON_MAP.asset) {
-      return properties;
-    }
-  }
-  return null;
-};
-
 export default function Map({
+  gameId,
+  turnPlayerId,
   gameState,
   players,
-  nthPlaces,
+  possiblePaths,
 }: {
+  gameId: string;
+  turnPlayerId: string;
   gameState: GameState;
-  players: {
-    order: number | null;
-    user: {
-      id: string;
-      username: string;
-      imageUrl: string | null;
-    };
-  }[];
-  nthPlaces: PlaceId[] | undefined;
+  players: NonNullable<Awaited<ReturnType<typeof getGame>>>["players"];
+  possiblePaths: PlaceId[][] | undefined;
 }) {
   const [viewState, setViewState] = useState(defaultPosition);
   const [places] = useState(generatePlaceGeoJson());
   const [routes] = useState(generateRouteGeoJson());
   const [assetPlaceId, setAssetPlaceId] = useState<PlaceId | null>(null);
-  const [coordinates, setCoordinates] = useState(ALL_PLACES.paris?.coordinates); // for testing
+  const [moveToPlaceId, setMoveToPlaceId] = useState<PlaceId | null>(null);
+  const visitablePlaces = possiblePaths?.map((p) => p[p.length - 1]) || [];
 
   return (
     <MapGl
@@ -78,21 +60,32 @@ export default function Map({
         map.addImage("pulsing-dot", createPulsingDot(map), { pixelRatio: 2 });
       }}
       onMouseEnter={(e) => {
-        if (getAssetProperties(e)) {
+        if (
+          geVisitablePlaceProperties(e, visitablePlaces) ||
+          getAssetProperties(e)
+        ) {
           e.target.getCanvas().style.cursor = "pointer";
         }
       }}
       onMouseLeave={(e) => {
-        if (getAssetProperties(e)) {
+        if (
+          geVisitablePlaceProperties(e, visitablePlaces) ||
+          getAssetProperties(e)
+        ) {
           const map = e.target;
           map.getCanvas().style.cursor = "";
         }
       }}
       onClick={(e) => {
-        const assetPeoperties = getAssetProperties(e);
-        if (assetPeoperties) {
-          e.preventDefault();
-          setAssetPlaceId(assetPeoperties.placeId as PlaceId);
+        const properties = geVisitablePlaceProperties(e, visitablePlaces);
+        if (properties) {
+          setMoveToPlaceId(properties.placeId);
+        } else {
+          const assetPeoperties = getAssetProperties(e);
+          if (assetPeoperties) {
+            e.preventDefault();
+            setAssetPlaceId(assetPeoperties.placeId as PlaceId);
+          }
         }
       }}
     >
@@ -120,11 +113,11 @@ export default function Map({
         />
       </Source>
 
-      {nthPlaces && nthPlaces.length > 0 && (
+      {possiblePaths && possiblePaths.length > 0 && (
         <Source
           id="pulsing-places"
           type="geojson"
-          data={generatePulsingPlaceGeoJson(nthPlaces)}
+          data={generatePulsingPlaceGeoJson(visitablePlaces)}
         >
           <Layer
             id="pulsing-places"
@@ -156,28 +149,24 @@ export default function Map({
       </Source>
 
       <AssetSheet placeId={assetPlaceId} setPlaceId={setAssetPlaceId} />
-      {players.map((player) => (
-        <Marker
-          key={player.user.id}
-          playerId={player.user.id}
-          player={gameState.players[player.user.id]}
-          playerImageUrl={player.user.imageUrl}
-        />
-      ))}
-      <MarkerGl
-        longitude={coordinates?.lng!}
-        latitude={coordinates?.lat!}
-        anchor="bottom"
-        style={{ width: "46px", height: "46px" }}
-        onClick={() => {
-          moveMarker(
-            ["paris", "nantes", "bordeaux", "pau", "sanSebastian"],
-            setCoordinates,
-          );
-        }}
-      >
-        <img src="/markers/white" />
-      </MarkerGl>
+      <MoveConfirmDialog
+        placeId={moveToPlaceId}
+        setPlaceId={setMoveToPlaceId}
+        gameId={gameId}
+        turnPlayerId={turnPlayerId}
+        possiblePaths={possiblePaths}
+      />
+      {players.map(
+        (player) =>
+          gameState.players[player.user.id].coordinates && (
+            <Marker
+              key={player.user.id}
+              playerId={player.user.id}
+              coordinates={gameState.players[player.user.id].coordinates}
+              playerImageUrl={player.user.imageUrl}
+            />
+          ),
+      )}
     </MapGl>
   );
 }
