@@ -154,17 +154,20 @@ export default function Map({
         gameId={gameId}
         turnPlayerId={turnPlayerId}
       />
-      {players.map(
-        (player) =>
-          gameState?.players[player.user.id].coordinates && (
+      {players.map((player) => {
+        const coordinates = gameState?.players[player.user.id].coordinates;
+        if (coordinates) {
+          return (
             <Marker
               key={player.user.id}
               playerId={player.user.id}
-              coordinates={gameState.players[player.user.id].coordinates}
+              coordinates={coordinates}
               playerImageUrl={player.user.imageUrl}
             />
-          ),
-      )}
+          );
+        }
+        return null;
+      })}
     </MapGl>
   );
 }
