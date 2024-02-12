@@ -6,15 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { convertPrice, getGameTimeText } from "@/utils";
+import { getGameTimeText } from "@/utils";
 import Map from "./map";
 import { getGame } from "@/server/queries/game";
 
 import { PLACE_NAME_DICTIONARY } from "@/constants/dictionary/map";
 import GameButtons from "./game-buttons";
-import { honoClient } from "@/lib/hono";
-import { InferRequestType } from "hono";
-import useSWR from "swr";
+
 import PlayerCard from "./player-card";
 import Dice from "./dice";
 import useGameState from "@/hooks/use-game-state";
@@ -37,7 +35,7 @@ export default function GameBody({ uid, game, gameId }: Props) {
 
   return (
     <main className="w-screen h-screen relative">
-      <Map gameId={gameId} turnPlayerId={turnPlayerId} players={game.players} />
+      <Map players={game.players} />
       <Card className="absolute top-3 left-3">
         <CardHeader>
           <CardTitle>
@@ -50,11 +48,9 @@ export default function GameBody({ uid, game, gameId }: Props) {
         </CardHeader>
       </Card>
 
-      {player && <PlayerCard gameState={gameState} player={player} />}
+      {player && <PlayerCard player={player} />}
 
-      {uid === turnPlayerId && (
-        <GameButtons gameId={gameId} playerId={turnPlayerId} />
-      )}
+      {uid === turnPlayerId && <GameButtons />}
       {!!turnPlayerState?.diceResult && (
         <Dice diceResult={turnPlayerState.diceResult} />
       )}

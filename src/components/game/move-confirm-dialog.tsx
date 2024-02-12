@@ -14,27 +14,28 @@ import { moveMarker } from "@/lib/turf";
 import { updatePlayerState } from "@/lib/firebase/realtimeDb";
 import { Button } from "@/components/ui/button";
 import usePossiblePaths from "@/hooks/use-possible-paths";
+import useGameState from "@/hooks/use-game-state";
+import { useParams } from "next/navigation";
 
 export default function MoveConfirmDialog({
   placeId,
   setPlaceId,
-  gameId,
-  turnPlayerId,
 }: {
   placeId: PlaceId | null;
   setPlaceId: Dispatch<SetStateAction<PlaceId | null>>;
-  gameId: string;
-  turnPlayerId: string;
 }) {
+  const params = useParams();
+  const gameId = params.gameId as string;
+  const { turnPlayerId } = useGameState();
   const possiblePaths = usePossiblePaths();
 
   const onClick = () => {
     setPlaceId(null);
     const path = possiblePaths.find((p) => p[p.length - 1] === placeId);
     moveMarker(path!, (coordinates) =>
-      updatePlayerState(gameId, turnPlayerId, { coordinates }),
+      updatePlayerState(gameId, turnPlayerId!, { coordinates }),
     );
-    updatePlayerState(gameId, turnPlayerId, {
+    updatePlayerState(gameId, turnPlayerId!, {
       action: "move",
       place: placeId!,
       diceResult: null,

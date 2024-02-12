@@ -27,12 +27,8 @@ const defaultPosition = {
 };
 
 export default function Map({
-  gameId,
-  turnPlayerId,
   players,
 }: {
-  gameId: string;
-  turnPlayerId: string;
   players: NonNullable<Awaited<ReturnType<typeof getGame>>>["players"];
 }) {
   const [viewState, setViewState] = useState(defaultPosition);
@@ -151,8 +147,6 @@ export default function Map({
       <MoveConfirmDialog
         placeId={moveToPlaceId}
         setPlaceId={setMoveToPlaceId}
-        gameId={gameId}
-        turnPlayerId={turnPlayerId}
       />
       {players.map((player) => {
         const coordinates = gameState?.players[player.user.id].coordinates;

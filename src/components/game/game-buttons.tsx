@@ -6,18 +6,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { rollDice } from "@/utils";
 import { updatePlayerState } from "@/lib/firebase/realtimeDb";
+import useGameState from "@/hooks/use-game-state";
 
-export default function GameButtons({
-  gameId,
-  playerId,
-}: {
-  gameId: string;
-  playerId: string;
-}) {
+export default function GameButtons() {
   const { push } = useRouter();
+  const params = useParams();
+  const gameId = params.gameId as string;
+  const { turnPlayerId } = useGameState();
 
   const buttons = [
     {
@@ -26,7 +24,7 @@ export default function GameButtons({
       onClick: async () => {
         const result = rollDice();
 
-        updatePlayerState(gameId, playerId, {
+        updatePlayerState(gameId, turnPlayerId!, {
           action: "roll",
           diceResult: result,
         });
