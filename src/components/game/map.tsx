@@ -61,9 +61,7 @@ export default function Map({
   const [places] = useState(generatePlaceGeoJson());
   const [routes] = useState(generateRouteGeoJson());
   const [assetPlaceId, setAssetPlaceId] = useState<PlaceId | null>(null);
-  const [coordinates, setCoordinates] = useState(
-    ALL_PLACES.berlin?.coordinates,
-  ); // for testing
+  const [coordinates, setCoordinates] = useState(ALL_PLACES.paris?.coordinates); // for testing
 
   return (
     <MapGl
@@ -172,7 +170,10 @@ export default function Map({
         anchor="bottom"
         style={{ width: "46px", height: "46px" }}
         onClick={() => {
-          moveMarker("berlin", "madrid", setCoordinates, 30);
+          moveMarker(
+            ["paris", "nantes", "bordeaux", "pau", "sanSebastian"],
+            setCoordinates,
+          );
         }}
       >
         <img src="/markers/white" />
