@@ -41,7 +41,7 @@ export default function AssetSheet({
         if (!open) setPlaceId(null);
       }}
     >
-      <SheetContent className="w-full sm:max-w-lg p-4 space-y-6">
+      <SheetContent className="w-full space-y-6 p-4 sm:max-w-lg">
         <SheetHeader>
           <SheetTitle>{PLACE_NAME_DICTIONARY[placeId!]?.en}</SheetTitle>
           <SheetDescription>There are some you can afford.</SheetDescription>

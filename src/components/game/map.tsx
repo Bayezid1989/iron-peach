@@ -92,6 +92,7 @@ export default function Map({
         tileSize={512}
         maxzoom={14}
       />
+
       <Source id="routes" type="geojson" data={routes}>
         <Layer
           id="routes"

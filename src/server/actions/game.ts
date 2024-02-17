@@ -44,7 +44,7 @@ export async function createNewGame(formData: FormData) {
   const gameDoc: GameState = {
     year: 1,
     round: 1,
-    turn: 1,
+    turn: 0,
     order: [user.uid],
     state: "beforeGame",
     players: {

@@ -16,6 +16,8 @@ import GameButtons from "./game-buttons";
 import PlayerCard from "./player-card";
 import Dice from "./dice";
 import useGameState from "@/hooks/use-game-state";
+import AssetBuySheet from "./asset-buy-sheet";
+import { ASSET_PLACES } from "@/constants/placeList";
 
 type Props = {
   uid: string;
@@ -34,9 +36,9 @@ export default function GameBody({ uid, game, gameId }: Props) {
   const player = game.players.find((player) => player.user.id === turnPlayerId);
 
   return (
-    <main className="w-screen h-screen relative">
+    <main className="relative h-screen w-screen">
       <Map players={game.players} />
-      <Card className="absolute top-3 left-3">
+      <Card className="absolute left-3 top-3">
         <CardHeader>
           <CardTitle>
             {getGameTimeText(gameState.year, gameState.round, game.totalYears)}
@@ -54,6 +56,10 @@ export default function GameBody({ uid, game, gameId }: Props) {
       {!!turnPlayerState?.diceResult && (
         <Dice diceResult={turnPlayerState.diceResult} />
       )}
+      {turnPlayerState?.action === "move" &&
+        turnPlayerState?.place! in ASSET_PLACES && (
+          <AssetBuySheet gameId={gameId} />
+        )}
     </main>
   );
 }

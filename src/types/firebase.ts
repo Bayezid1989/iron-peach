@@ -1,3 +1,4 @@
+import { increment } from "firebase/database";
 import type { PlaceId, ActionType, Coordinates } from ".";
 
 export type FirebaseCollection = "games" | "rooms";
@@ -25,5 +26,17 @@ export interface GameState {
   state: "beforeGame" | "playing" | "afterGame";
   players: {
     [playerId: string]: PlayerState;
+  };
+}
+
+export interface UpdateGameState {
+  year: number | ReturnType<typeof increment>;
+  round: number | ReturnType<typeof increment>;
+  turn: number | ReturnType<typeof increment>;
+  goal?: PlaceId;
+  isBotTurn?: boolean;
+  state: "beforeGame" | "playing" | "afterGame";
+  players: {
+    [playerId: string]: Partial<PlayerState>;
   };
 }
