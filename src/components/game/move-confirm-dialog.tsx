@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button";
 import usePossiblePaths from "@/hooks/use-possible-paths";
 import useGameState from "@/hooks/use-game-state";
 import { useParams } from "next/navigation";
+import { useMap } from "react-map-gl";
+import { ALL_PLACES } from "@/constants/placeList";
 
 export default function MoveConfirmDialog({
   placeId,
@@ -28,18 +30,21 @@ export default function MoveConfirmDialog({
   const gameId = params.gameId as string;
   const { turnPlayerId } = useGameState();
   const possiblePaths = usePossiblePaths();
+  const { current: map } = useMap();
 
-  const onClick = () => {
+  const onClick = async () => {
     setPlaceId(null);
     const path = possiblePaths.find((p) => p[p.length - 1] === placeId);
     moveMarker(path!, (coordinates) =>
       updatePlayerState(gameId, turnPlayerId!, { coordinates }),
     );
-    updatePlayerState(gameId, turnPlayerId!, {
+    await updatePlayerState(gameId, turnPlayerId!, {
       action: "move",
       place: placeId!,
       diceResult: null,
     });
+    const coordinates = ALL_PLACES[placeId!]?.coordinates;
+    map?.flyTo({ center: [coordinates?.lng!, coordinates?.lat!] });
   };
 
   return (
