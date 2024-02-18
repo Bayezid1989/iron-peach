@@ -7,7 +7,7 @@ import { getGame } from "@/server/queries/game";
 import useShortestPath from "@/hooks/use-shortest-path";
 import useGameState from "@/hooks/use-game-state";
 import { useEffect } from "react";
-import { toast } from "../ui/use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 export default function PlayerCard({
   player,
@@ -21,7 +21,11 @@ export default function PlayerCard({
 
   useEffect(() => {
     if (playerState?.action === "buyAsset") {
-      toast({ title: `${player.user.username} bought assets.` });
+      toast({ title: `${player.user.username} bought assets.` }); // Add what assets bought by creating and fetching the asset name
+    } else if (playerState?.action === "getCash") {
+      toast({ title: `${player.user.username} got cash.` }); // Add how much cash get
+    } else if (playerState?.action === "loseCash") {
+      toast({ title: `${player.user.username} lost cash.` }); // Add how much cash get
     }
   }, [playerState, player.user.username]);
 

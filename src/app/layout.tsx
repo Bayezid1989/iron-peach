@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
-import { inter } from "@/lib/shadcn-utils";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

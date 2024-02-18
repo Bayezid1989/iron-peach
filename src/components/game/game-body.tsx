@@ -17,8 +17,9 @@ import useGameState from "@/hooks/use-game-state";
 import AssetBuySheet from "./asset-buy-sheet";
 import AssetSheet from "./asset-sheet";
 import MoveConfirmDialog from "./move-confirm-dialog";
-import { PlaceId } from "@/types";
+import type { PlaceId } from "@/types";
 import { useState } from "react";
+import useMoveIncomeExpense from "@/hooks/use-move-income-expense";
 
 type Props = {
   uid: string;
@@ -31,6 +32,7 @@ export default function GameBody({ uid, isAdmin, game, gameId }: Props) {
   const { gameState, turnPlayerId, turnPlayerState } = useGameState();
   const [assetPlaceId, setAssetPlaceId] = useState<PlaceId | null>(null);
   const [moveToPlaceId, setMoveToPlaceId] = useState<PlaceId | null>(null);
+  useMoveIncomeExpense(gameId, uid);
 
   console.log("Game state data", gameState);
 
@@ -61,17 +63,21 @@ export default function GameBody({ uid, isAdmin, game, gameId }: Props) {
 
       {player && <PlayerCard player={player} />}
 
-      {uid === turnPlayerId && <GameButtons />}
+      {uid === turnPlayerId && (
+        <>
+          <GameButtons />
+          <MoveConfirmDialog
+            placeId={moveToPlaceId}
+            setPlaceId={setMoveToPlaceId}
+          />
+          <AssetBuySheet gameId={gameId} players={game.players} />
+        </>
+      )}
       {!!turnPlayerState?.diceResult && (
         <Dice diceResult={turnPlayerState.diceResult} />
       )}
-      <AssetSheet placeId={assetPlaceId} setPlaceId={setAssetPlaceId} />
-      <MoveConfirmDialog
-        placeId={moveToPlaceId}
-        setPlaceId={setMoveToPlaceId}
-      />
-      {turnPlayerState?.action === "move" && (
-        <AssetBuySheet gameId={gameId} players={game.players} />
+      {isAdmin && (
+        <AssetSheet placeId={assetPlaceId} setPlaceId={setAssetPlaceId} />
       )}
     </main>
   );

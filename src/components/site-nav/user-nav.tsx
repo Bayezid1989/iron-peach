@@ -15,7 +15,6 @@ import Link from "next/link";
 
 export async function UserNav() {
   const currentUser = await getCurrentUser();
-  console.log("currentUser uid", currentUser?.uid);
 
   // BUG: when logout --> lobby --> login, currentUser is null
   // Waiting for nextjs to fix this bug: https://github.com/vercel/next.js/discussions/54075#discussioncomment-6754339

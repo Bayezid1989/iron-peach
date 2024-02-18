@@ -57,3 +57,9 @@ export const START_PLACE_OPTIONS: (PlaceId | "random")[] = [
   "random",
   ...START_PLACES,
 ];
+
+export const CASH_VOLUME_RANGE = {
+  high: { min: 1000, max: 3000 },
+  medium: { min: 500, max: 1000 },
+  low: { min: 100, max: 500 },
+};

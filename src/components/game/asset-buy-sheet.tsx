@@ -23,14 +23,15 @@ import {
 } from "@/components/ui/sheet";
 import {
   updateGameState,
-  getNextTurnUpdateData,
+  endPlayerTurn,
+  isPlayerAtPlace,
 } from "@/lib/firebase/realtimeDb";
 import { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/shadcn-utils";
 import { toast } from "@/components/ui/use-toast";
 import { getGame } from "@/server/queries/game";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function AssetBuySheet({
   gameId,
@@ -45,13 +46,6 @@ export default function AssetBuySheet({
     assetPlace?.assets.map(() => false) || [],
   );
   if (!gameState || !turnPlayerState || !turnPlayerId || !assetPlace) {
-    return null;
-  }
-
-  if (
-    assetPlace.coordinates.lat !== turnPlayerState.coordinates?.lat ||
-    assetPlace.coordinates.lng !== turnPlayerState.coordinates?.lng
-  ) {
     return null;
   }
 
@@ -72,18 +66,14 @@ export default function AssetBuySheet({
       },
       [`players/${turnPlayerId}/action`]: "buyAsset",
     });
-
-    updateGameState(gameId, {
-      ...getNextTurnUpdateData(gameState),
-      [`players/${turnPlayerId}/action`]: "endTurn",
-    });
+    setChecks((prev) => prev.map(() => false));
+    endPlayerTurn(gameId, turnPlayerId, gameState);
   };
 
   return (
     <Sheet
       open={
-        turnPlayerState.action === "move" &&
-        turnPlayerState.place! in ASSET_PLACES
+        turnPlayerState.action === "move" && isPlayerAtPlace(turnPlayerState)
       }
     >
       <SheetContent side="bottom" hideX>
@@ -98,10 +88,8 @@ export default function AssetBuySheet({
             <Button
               variant="secondary"
               onClick={() => {
-                updateGameState(gameId, {
-                  ...getNextTurnUpdateData(gameState),
-                  [`players/${turnPlayerId}/action`]: "endTurn",
-                });
+                setChecks((prev) => prev.map(() => false));
+                endPlayerTurn(gameId, turnPlayerId, gameState);
               }}
             >
               End Turn
