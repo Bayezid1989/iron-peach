@@ -37,7 +37,7 @@ const getAlongCoordinates = (
 
 export const moveMarker = (
   path: PlaceId[],
-  updateCoordinates: (coordinates: Coordinates) => void,
+  updateCoordinates: (coordinates: Coordinates) => Promise<void> | void,
 ) => {
   const arc: turf.helpers.Point["coordinates"][] = [];
   for (let i = 0; i < path.length - 1; i++) {

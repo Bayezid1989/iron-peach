@@ -1,5 +1,5 @@
-import type { PlayerState, UpdateGameState } from "@/types/firebase";
-import { ref, update } from "firebase/database";
+import type { GameState, PlayerState, UpdateGameState } from "@/types/firebase";
+import { increment, ref, update } from "firebase/database";
 import { realtimeDb } from "./init";
 
 export const updateGameState = (
@@ -17,4 +17,14 @@ export const updatePlayerState = (
 ) => {
   const playerRef = ref(realtimeDb, `/games/${gameId}/players/${playerId}`);
   return update(playerRef, state);
+};
+
+export const getNextTurnUpdateData = (gameState: GameState) => {
+  const { turn, order } = gameState;
+  const nextTurn = (turn + 1) % order.length;
+  return {
+    turn: nextTurn,
+    round: gameState.round < 12 ? increment(1) : 1,
+    year: gameState.round < 12 ? gameState.year : increment(1),
+  };
 };

@@ -14,7 +14,7 @@ export default function useShortestPath() {
   const { gameState, turnPlayerState } = useGameState();
 
   const { data } = useSWR(
-    turnPlayerState
+    turnPlayerState && gameState?.goal !== turnPlayerState.place
       ? ["shortestPath", gameState?.goal, turnPlayerState.place]
       : null,
     fetcher({
@@ -25,5 +25,8 @@ export default function useShortestPath() {
     }),
   );
 
-  return data;
+  const returnData: typeof data =
+    gameState?.goal === turnPlayerState?.place ? { stops: [], count: 0 } : data;
+
+  return returnData;
 }

@@ -7,7 +7,7 @@ type Props = {
   params: { gameId: string };
 };
 
-export default async function Game({ params }: Props) {
+export default async function GamePage({ params }: Props) {
   const currentUser = await getCurrentUser();
   if (!currentUser) {
     redirect("/login");
@@ -19,5 +19,12 @@ export default async function Game({ params }: Props) {
     notFound();
   }
 
-  return <GameBody uid={currentUser.uid} game={game} gameId={gameId} />;
+  return (
+    <GameBody
+      uid={currentUser.uid}
+      isAdmin={currentUser.customClaims?.isAdmin}
+      game={game}
+      gameId={gameId}
+    />
+  );
 }

@@ -12,7 +12,7 @@ type Props = {
   };
 };
 
-export default async function WalletPage({ searchParams }: Props) {
+export default async function ResumePage({ searchParams }: Props) {
   const page = Number(searchParams?.page) || 1;
   const user = await getCurrentUser();
 

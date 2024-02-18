@@ -9,24 +9,28 @@ import {
 import { getGameTimeText } from "@/utils";
 import Map from "./map";
 import { getGame } from "@/server/queries/game";
-
 import { PLACE_NAME_DICTIONARY } from "@/constants/dictionary/map";
 import GameButtons from "./game-buttons";
-
 import PlayerCard from "./player-card";
 import Dice from "./dice";
 import useGameState from "@/hooks/use-game-state";
 import AssetBuySheet from "./asset-buy-sheet";
-import { ASSET_PLACES } from "@/constants/placeList";
+import AssetSheet from "./asset-sheet";
+import MoveConfirmDialog from "./move-confirm-dialog";
+import { PlaceId } from "@/types";
+import { useState } from "react";
 
 type Props = {
   uid: string;
+  isAdmin: boolean;
   game: Awaited<ReturnType<typeof getGame>>;
   gameId: string;
 };
 
-export default function GameBody({ uid, game, gameId }: Props) {
+export default function GameBody({ uid, isAdmin, game, gameId }: Props) {
   const { gameState, turnPlayerId, turnPlayerState } = useGameState();
+  const [assetPlaceId, setAssetPlaceId] = useState<PlaceId | null>(null);
+  const [moveToPlaceId, setMoveToPlaceId] = useState<PlaceId | null>(null);
 
   console.log("Game state data", gameState);
 
@@ -37,7 +41,12 @@ export default function GameBody({ uid, game, gameId }: Props) {
 
   return (
     <main className="relative h-screen w-screen">
-      <Map players={game.players} />
+      <Map
+        isAdmin={isAdmin}
+        players={game.players}
+        setAssetPlaceId={setAssetPlaceId}
+        setMoveToPlaceId={setMoveToPlaceId}
+      />
       <Card className="absolute left-3 top-3">
         <CardHeader>
           <CardTitle>
@@ -56,10 +65,14 @@ export default function GameBody({ uid, game, gameId }: Props) {
       {!!turnPlayerState?.diceResult && (
         <Dice diceResult={turnPlayerState.diceResult} />
       )}
-      {turnPlayerState?.action === "move" &&
-        turnPlayerState?.place! in ASSET_PLACES && (
-          <AssetBuySheet gameId={gameId} />
-        )}
+      <AssetSheet placeId={assetPlaceId} setPlaceId={setAssetPlaceId} />
+      <MoveConfirmDialog
+        placeId={moveToPlaceId}
+        setPlaceId={setMoveToPlaceId}
+      />
+      {turnPlayerState?.action === "move" && (
+        <AssetBuySheet gameId={gameId} players={game.players} />
+      )}
     </main>
   );
 }

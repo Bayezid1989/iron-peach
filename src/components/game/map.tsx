@@ -2,7 +2,7 @@
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import { MAP_STYLES } from "@/constants";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import MapGl, { Layer, NavigationControl, Source } from "react-map-gl";
 import {
   generatePlaceGeoJson,
@@ -10,14 +10,13 @@ import {
   generateRouteGeoJson,
 } from "@/lib/geoJson";
 import { PlaceId } from "@/types";
-import AssetSheet from "./asset-sheet";
 import Marker from "./marker";
 import { createPulsingDot } from "@/lib/canvas";
 import { getGame } from "@/server/queries/game";
 import { geVisitablePlaceProperties, getAssetProperties } from "@/lib/mapgl";
-import MoveConfirmDialog from "./move-confirm-dialog";
 import useGameState from "@/hooks/use-game-state";
 import usePossiblePaths from "@/hooks/use-possible-paths";
+import { UserRecord } from "firebase-admin/auth";
 
 const defaultPosition = {
   longitude: 23.727539,
@@ -27,15 +26,20 @@ const defaultPosition = {
 };
 
 export default function Map({
+  isAdmin,
   players,
+  setMoveToPlaceId,
+  setAssetPlaceId,
 }: {
+  isAdmin: boolean;
   players: NonNullable<Awaited<ReturnType<typeof getGame>>>["players"];
+  setMoveToPlaceId: Dispatch<SetStateAction<PlaceId | null>>;
+  setAssetPlaceId: Dispatch<SetStateAction<PlaceId | null>>;
 }) {
   const [viewState, setViewState] = useState(defaultPosition);
   const [places] = useState(generatePlaceGeoJson());
   const [routes] = useState(generateRouteGeoJson());
-  const [assetPlaceId, setAssetPlaceId] = useState<PlaceId | null>(null);
-  const [moveToPlaceId, setMoveToPlaceId] = useState<PlaceId | null>(null);
+
   const { gameState } = useGameState();
   const possiblePaths = usePossiblePaths();
   const visitablePlaces = possiblePaths.map((p) => p[p.length - 1]);
@@ -57,15 +61,16 @@ export default function Map({
       onMouseEnter={(e) => {
         if (
           geVisitablePlaceProperties(e, visitablePlaces) ||
-          getAssetProperties(e)
+          (isAdmin && getAssetProperties(e))
         ) {
           e.target.getCanvas().style.cursor = "pointer";
         }
       }}
       onMouseLeave={(e) => {
         if (
+          !visitablePlaces.length ||
           geVisitablePlaceProperties(e, visitablePlaces) ||
-          getAssetProperties(e)
+          (isAdmin && getAssetProperties(e))
         ) {
           const map = e.target;
           map.getCanvas().style.cursor = "";
@@ -75,7 +80,7 @@ export default function Map({
         const properties = geVisitablePlaceProperties(e, visitablePlaces);
         if (properties) {
           setMoveToPlaceId(properties.placeId);
-        } else {
+        } else if (isAdmin) {
           const assetPeoperties = getAssetProperties(e);
           if (assetPeoperties) {
             e.preventDefault();
@@ -144,11 +149,6 @@ export default function Map({
         />
       </Source>
 
-      <AssetSheet placeId={assetPlaceId} setPlaceId={setAssetPlaceId} />
-      <MoveConfirmDialog
-        placeId={moveToPlaceId}
-        setPlaceId={setMoveToPlaceId}
-      />
       {players.map((player) => {
         const coordinates = gameState?.players[player.user.id].coordinates;
         if (coordinates) {

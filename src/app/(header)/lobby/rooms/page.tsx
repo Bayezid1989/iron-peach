@@ -19,7 +19,7 @@ const people = [
   },
 ];
 
-export default async function Rooms() {
+export default async function RoomsPage() {
   return (
     <div>
       <div className="sm:flex sm:items-center">

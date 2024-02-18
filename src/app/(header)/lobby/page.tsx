@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function Lobby() {
+export default function LobbyPage() {
   redirect("/lobby/rooms");
 }

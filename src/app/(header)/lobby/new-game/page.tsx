@@ -1,6 +1,6 @@
 import { NewGameForm } from "@/components/lobby/new-game-form";
 
-export default function NewGame() {
+export default function NewGamePage() {
   return (
     <div className="space-y-20">
       <header>
