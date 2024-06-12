@@ -20,9 +20,12 @@ import {
 } from "drizzle-orm/mysql-core";
 
 const updatedAndCreatedAt = {
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
-  deletedAt: timestamp("deleted_at"),
+  createdAt: timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date" })
+    .defaultNow()
+    .onUpdateNow()
+    .notNull(),
+  deletedAt: timestamp("deleted_at", { mode: "date" }),
 };
 
 const userId = varchar("user_id", {
@@ -35,7 +38,7 @@ export const userTable = mysqlTable("user", {
   }).primaryKey(),
   username: varchar("username", { length: 31 }).unique().notNull(),
   imageUrl: text("image_url"),
-  email: varchar("email", { length: 256 }).unique().notNull(),
+  email: varchar("email", { length: 255 }).unique().notNull(),
   country: mysqlEnum("country", COUNTRIES_ALPHA3),
   ...updatedAndCreatedAt,
 });

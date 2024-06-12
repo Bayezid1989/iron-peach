@@ -1,6 +1,6 @@
 export const FIREBASE_CONFIG = {
   prd: {
-    apiKey: "AIzaSyBf7o_425Z6aVEFEaUfJwV41eRCWwzr0l8",
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: "iron-peach-prd.firebaseapp.com",
     // authDomain: "iron-peach.vercel.app",
     databaseURL: "https://iron-peach-prd-default-rtdb.firebaseio.com",
@@ -11,7 +11,7 @@ export const FIREBASE_CONFIG = {
     measurementId: "G-PZ6T6Z8MQX",
   },
   dev: {
-    apiKey: "AIzaSyB2U0T5IF4GdRp2tFC1ywaDY71t5HNWvNU",
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: "iron-peach-dev.firebaseapp.com",
     // authDomain: "iron-peach-git-preview-bayezid1989.vercel.app",
     databaseURL: "https://iron-peach-dev-default-rtdb.firebaseio.com",
